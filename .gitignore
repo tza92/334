@@ -1,0 +1,28 @@
+# macOS metadata
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100/
+.Trashes/
+.fseventsd/
+__MACOSX/
+
+# Editor temporary files
+*.swp
+*.swo
+*~
+
+# Local dependencies and caches (if using Node.js tooling)
+node_modules/
+.npm/
+.cache/
+.parcel-cache/
+
+# Logs
+*.log
+
+# Local environment files
+.env
+.env.*
+!.env.example
