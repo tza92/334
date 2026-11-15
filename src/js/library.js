@@ -5,12 +5,8 @@ const ownershipTrigger = document.querySelector("#ownership-trigger");
 
 // Capture the card pattern before interactions change its content.
 const gameCardTemplate = gameGrid.querySelector(".game-card").cloneNode(true);
-// Keep the existing sample highlightable without opening its workspace.
 const sampleGameCard = gameGrid.querySelector(".game-card");
-sampleGameCard.dataset.workspaceDisabled = "true";
-sampleGameCard.querySelectorAll("[data-workspace]").forEach((button) => {
-  button.setAttribute("aria-disabled", "true");
-});
+sampleGameCard.project = loadProjects().find((project) => project.id === "hollow-signal") || createDefaultHollowSignalProject();
 const launchDateFormatter = new Intl.DateTimeFormat("en-US", {
   month: "short",
   day: "numeric",
@@ -23,6 +19,7 @@ function createGameCard(project) {
   card.querySelector(".game-card-art").classList.toggle("has-no-cover", !coverImage && !sampleCoverSelected);
   if (id) card.dataset.gameId = id;
   card.querySelector("h3").textContent = name;
+  card.setAttribute("aria-label", `Open ${name} dashboard`);
   card.querySelector(".game-card-open").setAttribute("aria-label", `Open ${name} dashboard`);
   card.querySelector(".game-card-opened").textContent = project.openedAt ? "Opened today" : "Not opened yet";
 
@@ -47,8 +44,10 @@ function createGameCard(project) {
 }
 
 function renderStoredProjects() {
+  const projects = loadProjects();
+  sampleGameCard.project = projects.find((project) => project.id === "hollow-signal") || sampleGameCard.project;
   gameGrid.querySelectorAll("[data-game-id]").forEach((card) => card.remove());
-  loadProjects().filter((project) => !project.temporary).forEach((project) => {
+  projects.filter((project) => !project.temporary && project.id !== "hollow-signal").forEach((project) => {
     gameGrid.insertBefore(createGameCard(project), gameGrid.querySelector(".add-card"));
   });
 }
@@ -64,7 +63,6 @@ window.addEventListener("pageshow", (event) => {
 });
 
 function openGameWorkspace(card, section) {
-  if (card.dataset.workspaceDisabled === "true") return;
   openProject(card.project, section);
 }
 
@@ -147,11 +145,18 @@ document.addEventListener("game:open", (event) => {
 });
 
 gameGrid.addEventListener("click", (event) => {
+  const card = event.target.closest(".game-card");
+  if (!card) return;
   const button = event.target.closest("[data-workspace]");
-  if (!button) return;
-  const card = button.closest(".game-card");
+  if (!button && event.target.closest("button, a, input, select, textarea")) return;
   const sections = { Dashboard: "Home", Planning: "Plan", Analytics: "Analytics", Connections: "Connect" };
-  openGameWorkspace(card, sections[button.dataset.workspace] || "Home");
+  openGameWorkspace(card, sections[button?.dataset.workspace] || "Home");
+});
+
+gameGrid.addEventListener("keydown", (event) => {
+  if (!event.target.matches(".game-card") || !["Enter", " "].includes(event.key)) return;
+  event.preventDefault();
+  openGameWorkspace(event.target, "Home");
 });
 
 let workspaceShortcutPresses = [];

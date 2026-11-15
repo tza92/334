@@ -4,7 +4,18 @@ const workspaceHeaderTitle = document.querySelector("#workspace-header-title");
 const workspacePageTitle = document.querySelector("#workspace-page-title");
 const workspaceQuery = new URLSearchParams(window.location.search);
 const activeProject = loadProjects().find((project) => project.id === workspaceQuery.get("project"))
-  || { id: "blank", name: "Untitled game", temporary: true };
+  || (workspaceQuery.get("project") === "hollow-signal" ? createDefaultHollowSignalProject()
+    : { id: "blank", name: "Untitled game", temporary: true, setupFinished: false });
+const setupRestrictedSections = new Set(["Analytics", "Plan", "Settings"]);
+
+function syncWorkspaceSetupNavigation() {
+  gameWorkspace.dataset.dashboardState = activeProject.setupFinished ? "finished" : "setup";
+  document.querySelectorAll("#workspace-sidebar [data-section], #game-workspace [data-dashboard-section]").forEach((button) => {
+    const disabled = !activeProject.setupFinished && setupRestrictedSections.has(button.dataset.section || button.dataset.dashboardSection);
+    button.disabled = disabled;
+    button.setAttribute("aria-disabled", String(disabled));
+  });
+}
 
 async function dissolveToWorkspace(dialog, reveal) {
   if (dialog.dataset.transitioning === "true") return;
@@ -22,7 +33,7 @@ async function dissolveToWorkspace(dialog, reveal) {
       });
       await fade.finished.catch(() => {});
       dialog.close();
-      workspacePageTitle.focus();
+      workspacePageTitle.focus({ preventScroll: true });
     } else {
       dialog.close();
       reveal();
@@ -44,19 +55,42 @@ document.querySelectorAll("#dashboard-dialog").forEach((dialog) => {
 });
 
 function selectWorkspaceSection(section) {
+  syncWorkspaceSetupNavigation();
+  if (!activeProject.setupFinished && setupRestrictedSections.has(section)) section = "Home";
+  const sameSection = gameWorkspace.dataset.section === section;
   const gameName = activeProject.name;
   workspaceSidebar.querySelectorAll("[data-section]").forEach((button) => {
     if (button.dataset.section === section) button.setAttribute("aria-current", "page");
     else button.removeAttribute("aria-current");
   });
-  workspaceHeaderTitle.textContent = section;
   renderDashboard(activeProject, section);
+  syncWorkspaceSetupNavigation();
+  const connect = section === "Connect";
+  const inProgress = ["Analytics", "Plan", "Settings"].includes(section);
+  gameWorkspace.classList.toggle("has-placeholder", inProgress);
+  document.querySelector("#workspace-in-progress").hidden = !inProgress;
+  document.querySelector("#workspace-in-progress-title").textContent = `${section} is currently in progress`;
+  document.querySelector(".dashboard-grid").hidden = section !== "Home";
+  document.querySelector("#connections-page").hidden = !connect;
+  document.querySelector("#dashboard-game-name").hidden = connect || inProgress;
+  workspaceHeaderTitle.replaceChildren();
+  if (connect) {
+    const home = document.createElement("button");
+    home.type = "button";
+    home.className = "workspace-breadcrumb-home";
+    home.textContent = "Home";
+    home.addEventListener("click", () => selectWorkspaceSection("Home"));
+    workspaceHeaderTitle.append(home, " / Connect");
+    workspacePageTitle.textContent = "Connected Apps";
+    renderConnections();
+  } else workspaceHeaderTitle.textContent = section;
   saveProject(activeProject);
   document.title = `${section} · ${gameName} · Aggro.`;
   workspaceQuery.set("project", activeProject.id);
   workspaceQuery.set("section", section);
   history.replaceState(null, "", `workspace.html?${workspaceQuery}`);
-  workspacePageTitle.focus();
+  const heading = section === "Home" && activeProject.setupFinished ? document.querySelector("#campaign-title") : workspacePageTitle;
+  heading.focus({ preventScroll: sameSection });
 }
 
 workspaceSidebar.addEventListener("click", (event) => {
@@ -70,6 +104,7 @@ workspaceSidebar.addEventListener("click", (event) => {
 
 window.addEventListener("pagehide", () => saveProject(activeProject));
 document.addEventListener("DOMContentLoaded", () => {
+  initializeDefaultGameDashboard(activeProject);
   const section = workspaceQuery.get("section") || "Home";
   const validSection = Array.from(workspaceSidebar.querySelectorAll("[data-section]"))
     .some((button) => button.dataset.section === section);

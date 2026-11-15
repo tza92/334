@@ -25,9 +25,9 @@ const dashboardEmptyStates = {
     action: "milestone", label: "Add a milestone",
   },
   touchpoints: {
-    icon: "plus", title: "Log your first touchpoint",
-    description: "Add a post, press piece or store update to start seeing what drives wishlists.",
-    action: "touchpoint", label: "New Touchpoint", primary: true,
+    icon: "plus", title: "Add your first connection",
+    description: "Connect an application to start tracking performance and seeing connection updates.",
+    action: "touchpoint", label: "New Connection", primary: true,
   },
 
 };
@@ -51,7 +51,8 @@ function dashboardButton(label, action, primary = false) {
   const button = document.createElement("button");
   button.type = "button";
   button.className = primary ? "button button--primary" : "text-link";
-  button.dataset.dashboardAction = action;
+  if (action === "touchpoint") button.dataset.dashboardSection = "Connect";
+  else button.dataset.dashboardAction = action;
   button.append(label, dashboardIcon(primary ? "plus" : "arrow"));
   return button;
 }
@@ -190,16 +191,13 @@ function renderPlanningRecords(kind, records, content) {
 }
 
 function renderDashboardRecords(kind, records) {
+  if (kind === "touchpoints" && !hasDashboardConnections(activeProject)) records = [];
   const content = document.querySelector(`#${kind}-content`);
   const config = dashboardEmptyStates[kind];
-  const filter = document.querySelector(`#${kind}-filter`)?.value || "all";
-  const today = localDateKey();
-  const filtered = kind === "goals" ? filterGoalRecords(records, activeProject) : kind === "milestones" ? filterMilestoneRecords(records, activeProject) : records.filter((record) => {
-    if (filter === "all") return true;
-    if (filter === "upcoming") return record.date >= today;
-    if (filter === "past") return record.date < today;
-    return record.type === filter;
-  });
+  let filtered = kind === "goals" ? filterGoalRecords(records, activeProject)
+    : kind === "milestones" ? filterMilestoneRecords(records, activeProject)
+    : filterTouchpointRecords(records, activeProject);
+  filtered = filterDashboardMetricDates(kind, filtered, activeProject);
   content.replaceChildren();
   if (!filtered.length) {
     const empty = document.createElement("div");
@@ -208,7 +206,7 @@ function renderDashboardRecords(kind, records) {
     icon.className = "dashboard-icon";
     icon.append(dashboardIcon(config.icon));
     const title = document.createElement("h3");
-    title.textContent = records.length ? `No matching ${kind}` : config.title;
+    title.textContent = records.length ? `No matching ${kind === "touchpoints" ? "connections" : kind}` : config.title;
     const description = document.createElement("p");
     description.textContent = records.length ? "Try a different filter to see your updates." : config.description;
     empty.append(icon, title, description, dashboardButton(config.label, config.action, config.primary));
@@ -222,34 +220,64 @@ function renderDashboardRecords(kind, records) {
   }
 
   const list = document.createElement("ul");
-  list.className = "dashboard-records";
+  list.className = "connection-updates";
   [...filtered].sort((a, b) => b.date.localeCompare(a.date)).forEach((record) => {
     const item = document.createElement("li");
-    item.className = "dashboard-record";
-    const title = document.createElement("h3");
-    title.textContent = record.title;
-    const detail = document.createElement("p");
-    detail.textContent = `${record.platform} \u00b7 ${dashboardDate(record.date)}`;
-    item.append(title, detail);
+    const row = document.createElement(record.url ? "a" : "button");
+    row.className = "connection-update";
     if (record.url) {
-      const link = document.createElement("a");
-      link.href = record.url;
-      link.target = "_blank";
-      link.rel = "noopener noreferrer";
-      link.textContent = "View touchpoint \u2197";
-      item.append(link);
+      row.href = record.url;
+      row.target = "_blank";
+      row.rel = "noopener noreferrer";
+    } else {
+      row.type = "button";
+      row.dataset.dashboardSection = "Connect";
     }
+    const icon = document.createElement("span");
+    icon.className = `connection-update-icon${record.icon === "video" ? " connection-update-icon--video" : ""}`;
+    if (record.icon !== "video") icon.append(dashboardIcon(record.icon || "link"));
+    const body = document.createElement("span");
+    body.className = "connection-update-body";
+    const category = document.createElement("span");
+    category.className = "connection-update-category";
+    category.textContent = `${record.category || ({ post: "SHORT-FORM", press: "PRESS", store: "STOREFRONT" }[record.type] || "CONNECTION")} · ${record.platform}`;
+    const title = document.createElement("span");
+    title.className = "connection-update-title";
+    title.textContent = record.title;
+    const detail = document.createElement("span");
+    detail.className = "connection-update-summary";
+    detail.textContent = record.summary || "Performance updates will appear here.";
+    const time = document.createElement("span");
+    time.className = "connection-update-time";
+    time.textContent = record.relativeTime || dashboardDate(record.date);
+    body.append(category, title, detail);
+    row.append(icon, body, time, dashboardIcon("chevron-right"));
+    item.append(row);
     list.append(item);
   });
-  const add = dashboardButton(config.label, config.action);
-  add.classList.add("dashboard-add");
-  content.append(list, add);
+  content.append(list);
+}
+
+function renderConversionMetrics(card) {
+  const funnel = document.querySelector(".conversion-funnel");
+  const metrics = hasDashboardConnections(card) ? card.conversionMetrics : null;
+  funnel.classList.toggle("has-data", Boolean(metrics));
+  if (!metrics) hideConversionDetail();
+  Array.from(funnel.children).forEach((row, index) => {
+    row.children[1].textContent = metrics?.[index]?.value || "0";
+    row.querySelector("small").textContent = metrics?.[index]?.detail || "No data yet";
+    row.tabIndex = metrics ? 0 : -1;
+    if (metrics) row.setAttribute("role", "button");
+    else row.removeAttribute("role");
+    row.dataset.conversionStage = index;
+  });
 }
 
 function updateSetupCard(checkId, complete, initialLabel, completedLabel, delay = 0) {
   const check = document.getElementById(checkId);
   const card = check.closest(".setup-card");
   clearTimeout(card.completionTimer);
+  card.classList.toggle("setup-card--static", !delay);
   const update = () => {
     card.classList.toggle("is-complete", complete);
     check.setAttribute("aria-hidden", String(!complete));
@@ -298,10 +326,54 @@ function updateSetupProgress(complete, animate) {
   }, reduced ? 500 : 360);
 }
 
+let goalSetupAnimationPending = false;
+
+function celebrateSetupCompletion() {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const shower = document.createElement("div");
+  shower.className = "goal-celebration";
+  shower.setAttribute("aria-hidden", "true");
+  const emojis = ["🎉", "✨", "🎊", "⭐", "🙌"];
+  const animations = [];
+  for (let index = 0; index < 32; index++) {
+    const emoji = document.createElement("span");
+    emoji.textContent = emojis[index % emojis.length];
+    emoji.style.left = `${(index + Math.random()) / 32 * 100}%`;
+    emoji.style.fontSize = `${22 + Math.random() * 14}px`;
+    shower.append(emoji);
+  }
+  document.body.append(shower);
+  for (const emoji of shower.children) {
+    const drift = Math.random() * 120 - 60;
+    const rotation = Math.random() * 240 - 120;
+    const animation = emoji.animate([
+      { transform: "translate(0, -60px) rotate(0deg)", opacity: 0 },
+      { opacity: 1, offset: 0.12 },
+      { opacity: 1, offset: 0.8 },
+      { transform: `translate(${drift}px, ${window.innerHeight + 60}px) rotate(${rotation}deg)`, opacity: 0 },
+    ], { duration: 2200 + Math.random() * 800, delay: Math.random() * 650, easing: "ease-in", fill: "both" });
+    animations.push(animation.finished);
+  }
+  Promise.allSettled(animations).then(() => shower.remove());
+}
+
 function updateDashboardSetup(card, animate = false) {
-  const hasGoals = gameDashboardData(card).goals.length > 0;
-  updateSetupProgress(1 + Number(hasGoals), animate);
-  updateSetupCard("goal-complete", hasGoals, "Add a Goal", "Add another goal", animate ? 500 : 0);
+  if (gameWorkspace.dataset.section !== "Home") return;
+  const complete = Boolean(card.goalSetupComplete || gameDashboardData(card).goals.length);
+  const platformComplete = Boolean(card.platformSetupComplete || card.connections?.length);
+  if (complete) card.goalSetupComplete = true;
+  if (platformComplete) card.platformSetupComplete = true;
+  const playAnimation = animate && goalSetupAnimationPending;
+  const playPlatformAnimation = animate && card.platformSetupCelebrationPending && platformComplete;
+  goalSetupAnimationPending = false;
+  if (card.platformSetupCelebrationPending) {
+    delete card.platformSetupCelebrationPending;
+    saveProject(card);
+  }
+  updateSetupProgress(1 + Number(complete) + Number(platformComplete), playAnimation || playPlatformAnimation);
+  updateSetupCard("goal-complete", complete, "Add a Goal", "Add another goal", playAnimation ? 500 : 0);
+  updateSetupCard("platform-complete", platformComplete, "New Connection", "Add Connection", playPlatformAnimation ? 500 : 0);
+  if (playAnimation || playPlatformAnimation) celebrateSetupCompletion();
 }
 
 function renderDashboard(card, section) {
@@ -312,8 +384,11 @@ function renderDashboard(card, section) {
   }
   syncGoalFilterControls(card);
   syncMilestoneFilterControls(card);
+  syncTouchpointFilterControls(card);
   gameWorkspace.dataset.section = section;
   const data = gameDashboardData(card);
+  if (hasDashboardConnections(card)) extendConnectionDemo(card);
+  renderConversionMetrics(card);
   const name = card.name;
   const home = section === "Home";
   document.querySelector("#dashboard-game-name").textContent = name;
@@ -328,7 +403,7 @@ function renderDashboard(card, section) {
   document.querySelector("#dashboard-setup").hidden = !home;
   document.querySelector("#dashboard-setup-heading").hidden = !home;
   if (gameWorkspace.dataset.revealing !== "true" || !sameGame) {
-    updateDashboardSetup(card, sameGame && home);
+    updateDashboardSetup(card, home);
   }
 
   const panels = {
@@ -341,6 +416,8 @@ function renderDashboard(card, section) {
     document.querySelector(`#${name}-panel`).hidden = !visible;
   });
   Object.keys(dashboardEmptyStates).forEach((kind) => renderDashboardRecords(kind, data[kind]));
+  renderDashboardMetrics(card, section);
+  renderHomeSetup(card, section);
 }
 
 gameWorkspace.addEventListener("workspace:revealed", () => {
@@ -367,7 +444,7 @@ const dashboardForms = {
     ],
   },
   touchpoint: {
-    title: "New touchpoint", collection: "touchpoints",
+    title: "New Connection", collection: "touchpoints",
     fields: [
       { name: "title", label: "Title", placeholder: "Our first gameplay trailer", suggestions: ["Our first gameplay trailer"] },
       { name: "type", label: "Type", options: [{ value: "post", label: "Post" }, { value: "press", label: "Press piece" }, { value: "store", label: "Store update" }] },
@@ -750,7 +827,13 @@ dashboardForm.addEventListener("submit", (event) => {
     delete editingMilestone.goal;
     Object.assign(editingMilestone, record);
   } else {
+    if (dashboardAction === "goal" && !activeProject.goalSetupComplete
+        && !gameDashboardData(activeProject).goals.length) {
+      activeProject.goalSetupComplete = true;
+      goalSetupAnimationPending = true;
+    }
     gameDashboardData(activeProject)[config.collection].push(record);
+    if (dashboardAction === "touchpoint") seedConnectionDemo(activeProject);
     if (["goal", "milestone"].includes(dashboardAction)) {
       seedPlanningDemo(activeProject, config.collection, record);
     }

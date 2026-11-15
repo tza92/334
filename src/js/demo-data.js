@@ -1,3 +1,49 @@
+function initializeDefaultGameDashboard(card) {
+  if (!card.isDefaultGame || card.defaultDashboardSeeded) return;
+  seedConnectionDemo(card);
+  seedPlanningDemo(card, "goals", { title: "Reach 25,000 Steam wishlists by launch", metric: "Steam wishlists", target: "25000" });
+  seedPlanningDemo(card, "milestones", { title: "Steam Next Fest demo submission" });
+  card.defaultDashboardSeeded = true;
+}
+
+// Populate the dashboard reference after the first simulated connection is configured.
+function seedConnectionDemo(card) {
+  const seeded = card.seededDemoPanels ??= new Set();
+  if (seeded.has("connections")) {
+    extendConnectionDemo(card);
+    return;
+  }
+  seeded.add("connections");
+  card.conversionMetrics = [
+    { value: "412,000", detail: "Baseline — top of conversion" },
+    { value: "48,900", detail: "11.9% click-through from impressions" },
+    { value: "6,210", detail: "12.7% conversion from clicks" },
+    { value: "186", detail: "3.0% paid conversion" },
+    { value: "125", detail: "2.0% paid conversion" },
+  ];
+  const date = localDateKey();
+  gameDashboardData(card).touchpoints.push(
+    { title: '"When your save file corrupts"', type: "post", category: "SHORT-FORM", platform: "TIKTOK", summary: "48.2K views · 3.1K likes · +84 wishlists attributed", relativeTime: "2h ago", icon: "video", date, demo: true },
+    { title: '"Demo Teaser"', type: "post", category: "SHORT-FORM", platform: "Instagram", summary: "$120 spent · 41K reach · +67 wishlists", relativeTime: "Yesterday", icon: "megaphone", date, demo: true },
+    { title: 'Feature: "5 solo dev horror games to watch for in 2025"', type: "press", category: "PRESS", platform: "INDIE GAMES PLUS", summary: "~12K article reads · +221 wishlists attributed", relativeTime: "Yesterday", icon: "newspaper", date, demo: true },
+    { title: "Updated screenshots + short trailer", type: "store", category: "STOREFRONT", platform: "STEAM", summary: "Visits → Wishlist rate +2.3% (14.1%)", relativeTime: "2d ago", icon: "storefront", date, demo: true },
+  );
+  extendConnectionDemo(card);
+}
+
+function extendConnectionDemo(card) {
+  const records = gameDashboardData(card).touchpoints;
+  if (!card.seededDemoPanels?.has("connections")) return;
+  const date = localDateKey();
+  const examples = [
+    { title: "Devlog #13: building the corruption effect", type: "devlog", category: "DEVLOG", platform: "YOUTUBE", summary: "9.4K views · 610 likes · +58 wishlists attributed", relativeTime: "5d ago", icon: "megaphone", date, demo: true },
+    { title: "Playtest sign-ups opened in #announcements", type: "community", category: "COMMUNITY", platform: "DISCORD", summary: "312 reactions · +46 members joined", relativeTime: "1w ago", icon: "link", date, demo: true },
+  ];
+  examples.forEach(example => {
+    if (!records.some(record => record.title === example.title)) records.push(example);
+  });
+}
+
 // Reveal the example set once the first item is created in each panel.
 function seedPlanningDemo(card, kind, submittedRecord) {
   const seeded = card.seededDemoPanels ??= new Set();

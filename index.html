@@ -20,7 +20,7 @@
     <script src="src/js/new-game.js" defer></script>
   </head>
   <body>
-    <p id="text-completion-hint" class="visually-hidden">Typing any character fills in suggested text. You can then edit it freely.</p>
+    <p id="text-completion-hint" class="visually-hidden">Typing a matching first character fills in suggested text. You can then edit it freely.</p>
 
     <svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
       <symbol id="arrow" viewBox="0 0 24 24">
@@ -135,7 +135,7 @@
         </div>
 
         <div id="game-grid" class="game-grid">
-          <article class="card game-card" tabindex="0" data-owner="owned">
+          <article class="card game-card" tabindex="0" data-owner="owned" role="link" aria-label="Open Hollow Signal dashboard">
             <div class="game-card-art">
               <span aria-hidden="true"></span>
               <p class="game-card-launch">

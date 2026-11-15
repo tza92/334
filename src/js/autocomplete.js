@@ -1,4 +1,4 @@
-// Fill a sample on the first character, then leave the value freely editable.
+// Fill a matching sample on the first character, then leave the value freely editable.
 function enableSuggestedCompletion(input, suggestions) {
   let ready = !input.value;
   input.autocomplete = "off";
@@ -20,10 +20,12 @@ function enableSuggestedCompletion(input, suggestions) {
       return;
     }
     if (!ready || event.isComposing || !event.inputType?.startsWith("insert")) return;
-    const choices = typeof suggestions === "function" ? suggestions() : suggestions;
-    const match = choices.find((suggestion) => input.maxLength < 0 || suggestion.length <= input.maxLength);
-    if (!match) return;
     ready = false;
+    const choices = typeof suggestions === "function" ? suggestions() : suggestions;
+    const prefix = input.value.toLowerCase();
+    const match = choices.find((suggestion) => suggestion.toLowerCase().startsWith(prefix)
+      && (input.maxLength < 0 || suggestion.length <= input.maxLength));
+    if (!match) return;
     input.value = match;
     input.setSelectionRange(match.length, match.length);
   });

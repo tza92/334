@@ -12,6 +12,10 @@
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap"
     >
     <link rel="stylesheet" href="src/css/styles.css">
+    <link rel="stylesheet" href="src/css/connections.css">
+    <link rel="stylesheet" href="src/css/authorize.css">
+    <link rel="stylesheet" href="src/css/dashboard-metrics.css">
+    <link rel="stylesheet" href="src/css/home-setup.css">
     <script src="src/js/autocomplete.js" defer></script>
     <script src="src/js/dropdown.js" defer></script>
     <script src="src/js/projects.js" defer></script>
@@ -23,9 +27,14 @@
     <script src="src/js/goal-filters.js" defer></script>
     <script src="src/js/milestone-form.js" defer></script>
     <script src="src/js/milestone-filters.js" defer></script>
+    <script src="src/js/touchpoint-filters.js" defer></script>
+    <script src="src/js/conversion-details.js" defer></script>
+    <script src="src/js/connections.js" defer></script>
+    <script src="src/js/dashboard-metrics.js" defer></script>
+    <script src="src/js/home-setup.js" defer></script>
   </head>
   <body class="workspace-open">
-    <p id="text-completion-hint" class="visually-hidden">Typing any character fills in suggested text. You can then edit it freely.</p>
+    <p id="text-completion-hint" class="visually-hidden">Typing a matching first character fills in suggested text. You can then edit it freely.</p>
 
     <svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
       <symbol id="arrow" viewBox="0 0 24 24">
@@ -53,6 +62,9 @@
       <symbol id="close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
       <symbol id="chevron-right" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></symbol>
       <symbol id="trash" viewBox="0 0 24 24"><path d="M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7M14 10v7"/></symbol>
+      <symbol id="megaphone" viewBox="0 0 24 24"><path d="m3 10 16-5v14L3 14Zm4 5 2 6h4l-2-5"/></symbol>
+      <symbol id="newspaper" viewBox="0 0 24 24"><path d="M7 4h13v16H4V8h3m0-4v16M10 8h7m-7 4h7m-7 4h4"/></symbol>
+      <symbol id="storefront" viewBox="0 0 24 24"><path d="M4 10v10h16V10M3 10l2-6h14l2 6M3 10c0 4 6 4 6 0 0 4 6 4 6 0 0 4 6 4 6 0M9 20v-6h6v6"/></symbol>
       <symbol id="link" viewBox="0 0 24 24">
         <g transform="rotate(-45 12 12)">
           <path d="M9 7H7a5 5 0 0 0 0 10h2m6-10h2a5 5 0 0 1 0 10h-2M8 12h8"/>
@@ -149,8 +161,8 @@
               </svg>
             </h3>
             <p>Connect your platform to start tracking performance.</p>
-            <button class="button button--primary" type="button" data-dashboard-action="touchpoint">
-              New Touchpoint
+            <button class="button button--primary" type="button" data-dashboard-section="Connect">
+              <span class="setup-action-label">New Connection</span>
               <svg class="icon" aria-hidden="true"><use href="#plus"/></svg>
             </button>
           </article>
@@ -181,6 +193,45 @@
             <p>Enter your game's name and upload an image to get started.</p>
             <button class="button button--secondary" type="button" data-dashboard-action="name">Edit Name</button>
           </article>
+        </section>
+
+        <section id="campaign-header" class="campaign-header" aria-label="Campaign overview" hidden>
+          <div class="campaign-cover"><span id="campaign-cover-name"></span></div>
+          <div class="campaign-overview">
+            <div class="campaign-badges"><span>Active Push</span><span>Pre-Launch · Steam Next Fest</span></div>
+            <div class="campaign-title-row"><h1 id="campaign-title" tabindex="-1"></h1><button class="icon-button" type="button" data-dashboard-action="name" aria-label="Edit game name"><svg class="icon" aria-hidden="true"><use href="#edit"/></svg></button></div>
+            <p>The demo campaign · <span id="campaign-platforms"></span></p>
+            <div class="campaign-timeline"><div><span>Campaign · Day 37 of 105</span><span>Launch · Oct 14</span></div><progress value="37" max="105" aria-label="Campaign progress">37 of 105 days</progress></div>
+          </div>
+          <div class="campaign-performer">
+            <div class="campaign-performer-card">
+              <div class="campaign-performer-heading"><span>TOP PERFORMER · LAST 7 DAYS</span><button class="text-link" type="button" data-dashboard-section="Analytics">Track →</button></div>
+              <div class="campaign-performer-post"><span class="campaign-post-art" aria-hidden="true"></span><div><small>SHORT-FORM · TIKTOK</small><p>"When your save file corrupts"</p></div></div>
+              <div class="campaign-performer-result"><span><strong>+84</strong> wishlists</span><span>2.1x your average</span></div>
+            </div>
+            <button class="button button--primary" type="button" data-dashboard-section="Connect">Add Connection <svg class="icon" aria-hidden="true"><use href="#plus"/></svg></button>
+          </div>
+        </section>
+        <section id="dashboard-metrics" class="dashboard-metrics" aria-label="Connection performance overview" hidden>
+          <div class="metrics-toolbar">
+            <div class="metrics-period-control">
+              <label for="metrics-period">Showing data for</label>
+              <select id="metrics-period"><option value="7">Last 7 days</option><option value="14">Last 2 weeks</option><option value="month">This month</option><option value="campaign">Since campaign start</option></select>
+              <span id="metrics-comparison" class="metrics-muted">compared with the 7 days before</span>
+            </div>
+            <div class="metrics-horizon-control">
+              <label for="metrics-horizon">Goals and milestones due in</label>
+              <select id="metrics-horizon"><option value="week">Next week</option><option value="2weeks">Next 2 weeks</option><option value="month">Next month</option><option value="3months" selected>Next 3 months</option><option value="all">All time</option></select>
+            </div>
+            <span class="metrics-sync"><span aria-hidden="true"></span>Sample data · updated 10 min ago</span>
+          </div>
+          <div id="metrics-carousel" class="metrics-carousel" role="region" aria-roledescription="carousel" aria-label="Performance metrics">
+            <div id="metrics-track" class="metrics-track" tabindex="0" aria-label="Scroll performance metrics"></div>
+            <button id="metrics-previous" class="metrics-arrow metrics-arrow--previous" type="button" aria-label="Previous metrics"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 6-6 6 6 6"/></svg></button>
+            <button id="metrics-next" class="metrics-arrow metrics-arrow--next" type="button" aria-label="Next metrics"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></button>
+          </div>
+          <div id="metrics-pagination" class="metrics-pagination" aria-label="Metric pages"></div>
+          <p id="metrics-status" class="visually-hidden" role="status"></p>
         </section>
 
         <div class="dashboard-grid">
@@ -270,29 +321,136 @@
           </section>
           <section id="touchpoints-panel" class="dashboard-panel" aria-labelledby="touchpoints-title">
             <header class="panel-heading">
-              <h2 id="touchpoints-title">Touchpoint updates</h2>
+              <h2 id="touchpoints-title">Connection Updates</h2>
               <div class="panel-actions">
-                <select id="touchpoints-filter" class="dashboard-filter" aria-label="Filter touchpoints">
-                  <option value="all">Filter</option>
-                  <option value="post">Posts</option>
-                  <option value="press">Press</option>
-                  <option value="store">Store updates</option>
-                </select>
+                <button
+                  id="touchpoints-filter-trigger"
+                  class="dashboard-filter goal-filter-trigger"
+                  type="button"
+                  popovertarget="touchpoints-filter-popup"
+                  aria-haspopup="dialog"
+                  aria-expanded="false"
+                  aria-controls="touchpoints-filter-popup"
+                >
+                  Filter <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+                </button>
+                <div
+                  id="touchpoints-filter-popup"
+                  class="touchpoint-filters-popup"
+                  popover
+                  role="dialog"
+                  aria-label="Filter connections"
+                ></div>
                 <button
                   class="button panel-add button--primary"
                   type="button"
-                  data-dashboard-action="touchpoint"
+                  data-dashboard-section="Connect"
                 >
-                  <svg class="icon" aria-hidden="true"><use href="#plus"/></svg> Add Touchpoint
+                  <svg class="icon" aria-hidden="true"><use href="#plus"/></svg> Add Connection
                 </button>
               </div>
             </header>
-            <div id="touchpoints-content" class="panel-content"></div>
+            <div id="touchpoints-content" class="panel-content" tabindex="0" role="region" aria-label="Connection updates feed"></div>
+          </section>
+        </div>
+        <section id="workspace-in-progress" class="workspace-in-progress" aria-labelledby="workspace-in-progress-title" hidden>
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 6a5 5 0 0 0-6 6L3 17a3 3 0 0 0 4 4l5-5a5 5 0 0 0 6-6l-3 3-4-4Z"/></svg>
+          <h2 id="workspace-in-progress-title"></h2>
+          <p>We're working on this page. Check back soon.</p>
+          <button class="button button--secondary" type="button" data-dashboard-section="Home">Back to Home</button>
+        </section>
+        <div id="connections-page" class="connections-page" hidden>
+          <section class="connections-panel" aria-labelledby="connections-title">
+            <header class="connections-heading">
+              <h2 id="connections-title">Connections</h2>
+              <select class="connection-type-filter" data-connections-filter="saved" aria-label="Filter connections by type">
+                <option value="all">All types</option><option value="video">Content</option><option value="store">Storefront</option><option value="community">Community</option>
+              </select>
+            </header>
+            <div id="saved-connections" class="connections-grid"></div>
+            <div id="connections-empty" class="connections-empty">
+              <span class="connection-search"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10" cy="10" r="6"/><path d="m15 15 5 5"/></svg></span>
+              <h3>No Apps Connected</h3>
+              <p>Try connecting an application</p>
+              <button class="text-link" type="button" data-add-application>Add Application <svg class="icon" aria-hidden="true"><use href="#arrow"/></svg></button>
+            </div>
+            <p class="connection-no-results" data-connection-no-results="saved" hidden>No connections match this type.</p>
+          </section>
+          <section class="connections-panel" aria-labelledby="recommended-connections-title">
+            <header class="connections-heading">
+              <h2 id="recommended-connections-title">Recommended Connections</h2>
+              <select class="connection-type-filter" data-connections-filter="recommended" aria-label="Filter recommended connections by type">
+                <option value="all">All types</option><option value="video">Content</option><option value="store">Storefront</option><option value="community">Community</option>
+              </select>
+            </header>
+            <div id="recommended-connections" class="connections-grid"></div>
+            <p class="connection-no-results" data-connection-no-results="recommended" hidden>No applications match this type.</p>
+          </section>
+          <section class="connections-panel" aria-labelledby="more-connections-title">
+            <header class="connections-heading">
+              <h2 id="more-connections-title">More Connections</h2>
+              <select class="connection-type-filter" data-connections-filter="more" aria-label="Filter more connections by type">
+                <option value="all">All types</option><option value="video">Content</option><option value="store">Storefront</option><option value="community">Community</option>
+              </select>
+            </header>
+            <div id="more-connections" class="connections-grid"></div>
+            <p class="connection-no-results" data-connection-no-results="more" hidden>No applications match this type.</p>
           </section>
         </div>
         <p id="dashboard-status" class="visually-hidden" role="status"></p>
       </div>
     </main>
+
+    <dialog id="authorization-window" class="authorization-window" aria-labelledby="authorization-window-title">
+      <header class="authorization-window-bar">
+        <span id="authorization-window-title"></span>
+        <span class="authorization-window-controls">
+          <span aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M1 6h10"/></svg></span>
+          <span aria-hidden="true"><svg viewBox="0 0 12 12"><rect x="1.5" y="1.5" width="9" height="9"/></svg></span>
+          <button id="authorization-window-close" type="button" aria-label="Close authorization window"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="m1.5 1.5 9 9m0-9-9 9"/></svg></button>
+        </span>
+      </header>
+      <div class="authorization-window-address"><span class="authorization-address-icon" aria-hidden="true"></span><span id="authorization-window-address"></span></div>
+      <div id="authorization-screen" class="authorization-screen">
+        <section class="authorization-panel" aria-labelledby="authorization-title">
+          <h2 id="authorization-title">Aggro wants to access your account</h2>
+          <div class="authorization-footer">
+            <p class="authorization-simulation">Simulated authorization. No real account access or data syncing.</p>
+            <p id="authorization-terms"></p>
+            <div class="authorization-actions">
+              <button id="authorization-cancel" type="button">Cancel</button>
+              <button id="authorization-connect" class="authorization-connect" type="button">Connect</button>
+            </div>
+          </div>
+        </section>
+      </div>
+    </dialog>
+
+    <dialog id="connection-dialog" class="dashboard-dialog connection-dialog" aria-labelledby="connection-dialog-title" aria-describedby="connection-dialog-description">
+      <form id="connection-form">
+        <header class="connection-dialog-heading">
+          <h2 id="connection-dialog-title">Application settings</h2>
+          <button class="dialog-dismiss" type="button" data-close aria-label="Close application setup"><svg class="icon" aria-hidden="true"><use href="#close"/></svg></button>
+        </header>
+        <p id="connection-dialog-description"></p>
+        <div id="connection-dialog-content"></div>
+        <div class="wizard-actions">
+          <button id="connection-remove" class="button connection-disconnect" type="button" hidden>− Disconnect</button>
+          <button id="connection-cancel" class="button button--secondary" type="button" data-close>Cancel</button>
+          <button id="connection-save" class="button button--primary" type="submit">Save <svg class="icon" aria-hidden="true"><use href="#check"/></svg></button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog id="remove-connection-dialog" class="remove-connection-dialog" aria-labelledby="remove-connection-title" aria-describedby="remove-connection-description">
+      <span class="remove-connection-icon" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24"><path d="M7 12h10"/></svg></span>
+      <h2 id="remove-connection-title">Remove application?</h2>
+      <p id="remove-connection-description"></p>
+      <div class="wizard-actions">
+        <button class="button button--secondary" type="button" autofocus data-close>Cancel</button>
+        <button id="confirm-remove-connection" class="button button--danger" type="button">Remove app</button>
+      </div>
+    </dialog>
 
     <dialog id="dashboard-dialog" class="dashboard-dialog" aria-labelledby="dashboard-dialog-title">
       <button class="dialog-dismiss" type="button" data-close aria-label="Close dialog">

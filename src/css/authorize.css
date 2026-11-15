@@ -1,0 +1,55 @@
+.authorization-screen {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  font-family: Arial, sans-serif;
+  color: #111;
+  background: #fff;
+}
+
+
+.authorization-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: min(500px, calc(100% - 32px));
+  min-height: min(430px, calc(100dvh - 146px));
+  margin: 24px auto;
+  padding: 18px;
+  border: 1px solid #dedede;
+}
+
+#authorization-title {
+  font-weight: 700;
+  max-width: 360px;
+  margin: 0 auto;
+  font-size: 24px;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.authorization-footer p { margin: 14px 0; color: #444; font-size: 14px; line-height: normal; }
+.authorization-footer .authorization-simulation { color: #71717a; font-size: 12px; }
+.authorization-actions { display: flex; justify-content: space-between; gap: 12px; margin-top: 18px; }
+
+.authorization-actions button {
+  min-width: 104px;
+  min-height: 38px;
+  padding: 8px 18px;
+  color: #444;
+  font: 500 14px Arial, sans-serif;
+  background: white;
+  border: 1px solid #dedede;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.authorization-actions .authorization-connect { color: #fff; background: #3079ff; border-color: #3079ff; }
+.authorization-actions button:hover { filter: brightness(.96); }
+.authorization-actions button:focus-visible { outline: 3px solid #978bff; outline-offset: 3px; }
+.authorization-actions button:disabled { cursor: default; opacity: .6; }
+
+@media (max-width: 540px) {
+  .authorization-panel { min-height: min(430px, calc(100dvh - 130px)); margin: 16px auto; }
+  .authorization-actions { gap: 12px; }
+}
