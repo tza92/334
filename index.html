@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Manage your games, dashboards, and launch plans with Aggro.">
+    <title>Games · Aggro.</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap"
+    >
+    <link rel="stylesheet" href="src/css/styles.css">
+    <script src="src/js/autocomplete.js" defer></script>
+    <script src="src/js/dropdown.js" defer></script>
+    <script src="src/js/projects.js" defer></script>
+    <script src="src/js/common.js" defer></script>
+    <script src="src/js/library.js" defer></script>
+    <script src="src/js/new-game.js" defer></script>
+  </head>
+  <body>
+    <p id="text-completion-hint" class="visually-hidden">Typing any character fills in suggested text. You can then edit it freely.</p>
+
+    <svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <symbol id="arrow" viewBox="0 0 24 24">
+        <path d="M5 12h14m-6-7 7 7-7 7"/>
+      </symbol>
+      <symbol id="plus" viewBox="0 0 24 24">
+        <path d="M12 4v16M4 12h16"/>
+      </symbol>
+      <symbol id="bell" viewBox="0 0 24 24">
+        <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/>
+      </symbol>
+      <symbol id="check" viewBox="0 0 24 24">
+        <path d="m5 12 4 4 10-10"/>
+      </symbol>
+      <symbol id="target" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="9"/>
+        <circle cx="12" cy="12" r="5"/>
+        <circle cx="12" cy="12" r="1"/>
+      </symbol>
+      <symbol id="calendar" viewBox="0 0 24 24">
+        <rect x="4" y="5" width="16" height="16" rx="2"/>
+        <path d="M8 3v4m8-4v4M4 11h16"/>
+      </symbol>
+      <symbol id="edit" viewBox="0 0 24 24"><path d="m15 5 4 4M4 20l4-1L20 7a2.8 2.8 0 0 0-4-4L4 15Z"/></symbol>
+      <symbol id="close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+      <symbol id="chevron-right" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></symbol>
+      <symbol id="trash" viewBox="0 0 24 24"><path d="M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7M14 10v7"/></symbol>
+      <symbol id="link" viewBox="0 0 24 24">
+        <g transform="rotate(-45 12 12)">
+          <path d="M9 7H7a5 5 0 0 0 0 10h2m6-10h2a5 5 0 0 1 0 10h-2M8 12h8"/>
+        </g>
+      </symbol>
+      <symbol id="gamepad" viewBox="0 0 24 24">
+        <path
+          d="M7 6h10c2 0 3 1 3.5 3l1.3 8c.3 1.7-1.6 2.8-2.9 1.7L15 16H9l-3.9 2.7c-1.3 1.1-3.2 0-2.9-1.7l1.3-8C4 7 5 6 7 6ZM8 9v5m-2.5-2.5h5"
+        />
+        <circle cx="16" cy="10" r=".8" fill="currentColor" stroke="none"/>
+        <circle cx="18.5" cy="13" r=".8" fill="currentColor" stroke="none"/>
+      </symbol>
+    </svg>
+
+    <header class="site-header">
+      <a class="brand" href="index.html" aria-label="Aggro home">Aggro.</a>
+      <nav class="account-nav" aria-label="Account">
+        <button
+          class="icon-button notification-button"
+          type="button"
+          aria-label="Notifications"
+        >
+          <svg class="icon" aria-hidden="true"><use href="#bell"/></svg>
+        </button>
+        <button class="avatar" type="button" aria-label="Account for MC">MC</button>
+      </nav>
+    </header>
+
+    <main id="games-library">
+      <section class="page-banner" aria-labelledby="page-title">
+        <div class="container banner-content">
+          <div class="page-intro">
+            <h1 id="page-title">Games</h1>
+            <p>Manage your games or add a new one.</p>
+          </div>
+          <button class="button button--primary" type="button" data-new-game>
+            New Game <svg class="icon" aria-hidden="true"><use href="#plus"/></svg>
+          </button>
+        </div>
+      </section>
+
+      <section class="container games-section" aria-labelledby="recent-title">
+        <div class="section-heading">
+          <h2 id="recent-title">Recent Games</h2>
+          <button
+            id="ownership-trigger"
+            class="filter-trigger"
+            type="button"
+            popovertarget="ownership"
+            aria-haspopup="menu"
+            aria-expanded="false"
+            aria-controls="ownership"
+          >
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="8" r="3"/>
+              <path d="M5 20v-2a7 7 0 0 1 14 0v2"/>
+            </svg>
+            <span id="ownership-label" data-dropdown-label>Owned by Me</span>
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+          <div id="ownership" class="filter-menu" popover role="menu" aria-label="Filter games by ownership">
+            <button
+              class="filter-option"
+              type="button"
+              tabindex="-1"
+              data-owner-filter="owned"
+              role="menuitemradio"
+              aria-checked="true"
+            >
+              <span>Owned by Me</span>
+              <svg class="icon" aria-hidden="true"><use href="#check"/></svg>
+            </button>
+            <button
+              class="filter-option"
+              type="button"
+              tabindex="-1"
+              data-owner-filter="all"
+              role="menuitemradio"
+              aria-checked="false"
+            >
+              <span>All Games</span>
+              <svg class="icon" aria-hidden="true"><use href="#check"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <div id="game-grid" class="game-grid">
+          <article class="card game-card" tabindex="0" data-owner="owned">
+            <div class="game-card-art">
+              <span aria-hidden="true"></span>
+              <p class="game-card-launch">
+                Launch &middot; <time datetime="2026-10-14">Oct 14</time>
+              </p>
+            </div>
+            <div class="game-card-heading">
+              <h3>Hollow Signal</h3>
+              <button
+                class="game-card-open"
+                type="button"
+                data-workspace="Dashboard"
+                aria-label="Open Hollow Signal dashboard"
+              >
+                <svg class="icon" aria-hidden="true"><use href="#arrow"/></svg>
+              </button>
+            </div>
+            <p class="game-card-ownership">
+              Owned by me &middot; <span class="game-card-opened">Opened today</span>
+            </p>
+            <nav class="game-card-links" aria-label="Hollow Signal workspace">
+              <button class="text-link" type="button" data-workspace="Planning">Planning</button>
+              <button class="text-link" type="button" data-workspace="Analytics">Analytics</button>
+              <button class="text-link" type="button" data-workspace="Connections">Connections</button>
+            </nav>
+          </article>
+
+          <div class="card add-card">
+            <h3 class="add-card-title">Add a game</h3>
+            <p class="add-card-description">
+              Start with a blank workspace for your next game.
+            </p>
+            <button class="text-link add-card-action" type="button" data-new-game>
+              New game <svg class="icon" aria-hidden="true"><use href="#arrow"/></svg>
+            </button>
+          </div>
+        </div>
+        <p id="game-status" class="visually-hidden" role="status"></p>
+      </section>
+    </main>
+
+    <div
+      id="game-context-menu"
+      class="filter-menu context-menu"
+      popover
+      role="menu"
+      aria-label="Game actions"
+    >
+      <button id="delete-game" class="filter-option context-menu-delete" type="button" role="menuitem">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7M14 10v7"/>
+        </svg>
+        Delete game
+      </button>
+    </div>
+
+    <dialog id="new-game-dialog" class="new-game-dialog" aria-labelledby="new-game-title">
+      <button class="dialog-dismiss" type="button" data-close aria-label="Close dialog">
+        <svg class="icon" aria-hidden="true"><use href="#close"/></svg>
+      </button>
+      <form id="new-game-form">
+        <section id="game-setup-step" class="wizard-step wizard-step--setup" aria-labelledby="new-game-title">
+          <h2 id="new-game-title">Add a game</h2>
+          <p class="wizard-description">Set up a space to manage your game’s marketing.</p>
+          <div class="cover-picker">
+            <button id="game-cover" class="cover-upload" type="button" aria-label="Use sample game cover">
+              <span class="cover-upload-placeholder">
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <rect x="3" y="4" width="18" height="16" rx="2"/>
+                  <circle cx="8" cy="9" r="2"/>
+                  <path d="m3 17 6-5 4 4 3-3 5 4"/>
+                </svg>
+                Upload cover<br>image
+              </span>
+            </button>
+            <button
+              id="replace-cover"
+              class="cover-replace"
+              type="button"
+              hidden
+              title="Replace cover image"
+              aria-label="Replace cover image"
+            >
+              <svg class="material-icon" viewBox="0 -960 960 960" aria-hidden="true">
+                <path
+                  d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-110h80v280H520v-80h168q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q77 0 139-44t87-116h84q-28 106-114 173t-196 67Z"
+                />
+              </svg>
+            </button>
+          </div>
+          <label class="field game-title-field">
+            <span>Game title<span class="required-mark" aria-hidden="true">*</span></span>
+            <input id="game-name" name="gameName" maxlength="60" placeholder="Untitled Game" required>
+          </label>
+          <button id="open-people" class="text-link invite-people-action" type="button">
+            Invite People <svg id="people-arrow" class="icon" aria-hidden="true"><use href="#arrow"/></svg>
+            <span id="people-count" class="people-count" hidden>
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="12" cy="7" r="4"/>
+                <path d="M4 21v-3a8 8 0 0 1 16 0v3Z"/>
+              </svg>
+              <span class="people-count-value">0</span>
+            </span>
+          </button>
+          <div class="wizard-actions">
+            <button class="button button--secondary" type="button" data-close>Cancel</button>
+            <button id="game-next" class="button button--primary" type="submit" disabled>Next</button>
+          </div>
+        </section>
+      </form>
+
+      <section
+        id="game-done-step"
+        class="wizard-step wizard-step--done"
+        hidden
+        aria-labelledby="done-step-title"
+      >
+        <svg class="success-icon" viewBox="0 0 64 64" aria-hidden="true">
+          <circle cx="32" cy="32" r="27"/>
+          <path d="m18 32 9 9 19-20"/>
+        </svg>
+        <h2 id="done-step-title" tabindex="-1">All Done!</h2>
+        <p id="done-description" class="done-description"></p>
+        <button id="done-people" class="text-link done-people" type="button">
+          <span id="done-invite-label">Invite People</span>
+          <svg id="done-invite-arrow" class="icon" aria-hidden="true"><use href="#arrow"/></svg>
+          <span id="done-shared" class="done-shared" hidden>
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="7" r="3"/>
+              <path d="M5 21v-3a7 7 0 0 1 14 0v3Z"/>
+            </svg>
+            <span id="done-shared-count"></span>
+          </span>
+        </button>
+        <button id="done-open" class="button done-open button--primary" type="button">Open</button>
+        <button class="done-cancel" type="button" data-close>Cancel</button>
+      </section>
+
+      <section
+        id="game-people-step"
+        class="wizard-step wizard-step--people"
+        hidden
+        aria-labelledby="people-step-title"
+      >
+        <div class="people-heading">
+          <button class="people-back" type="button" data-setup aria-label="Back to Add a game">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m14 6-6 6 6 6"/></svg>
+          </button>
+          <h2 id="people-step-title" tabindex="-1">Add People</h2>
+        </div>
+        <div class="invite-search">
+          <form id="invite-form" class="invite-form">
+            <label class="visually-hidden" for="invite-email">Email address</label>
+            <input
+              id="invite-email"
+              type="email"
+              name="email"
+              maxlength="254"
+              placeholder="Email address"
+              autocomplete="off"
+              required
+              role="combobox"
+              aria-autocomplete="list"
+              aria-expanded="false"
+              aria-controls="invite-suggestions"
+              aria-describedby="invite-error"
+            >
+            <label class="visually-hidden" for="invite-permission">Permission</label>
+            <select id="invite-permission" name="permission" hidden>
+              <option value="view">Can View</option>
+              <option value="edit">Can Edit</option>
+            </select>
+            <button id="invite-submit" class="button button--primary" type="submit" hidden>Invite</button>
+          </form>
+          <div
+            id="invite-suggestions"
+            class="invite-suggestions"
+            hidden
+            role="listbox"
+            aria-label="Recent people"
+          >
+            <button
+              id="invite-suggestion"
+              class="person-row person-row--suggestion"
+              type="button"
+              tabindex="-1"
+              role="option"
+              aria-selected="false"
+            >
+              <span id="suggestion-avatar" class="person-avatar" aria-hidden="true">JS</span>
+              <span class="person-details">
+                <span id="suggestion-name" class="person-name">James Sullivan</span>
+                <span id="suggestion-email">jsullivan23@gmail.com</span>
+              </span>
+            </button>
+          </div>
+        </div>
+        <p id="invite-error" class="form-error" role="alert"></p>
+        <ul id="people-list" class="people-list" aria-label="Game members">
+          <li class="person-row">
+            <span class="person-avatar" aria-hidden="true">RM</span>
+            <div class="person-details">
+              <p>Robson Miller</p>
+              <span>you@gmail.com</span>
+            </div>
+            <span class="person-role">Owner</span>
+          </li>
+        </ul>
+        <p id="people-status" class="visually-hidden" role="status"></p>
+        <div class="wizard-actions">
+          <button class="button button--secondary" type="button" data-setup>Back</button>
+          <button class="button button--primary" type="button" data-setup>Done</button>
+        </div>
+      </section>
+    </dialog>
+
+    <template id="person-row-template">
+      <li class="person-row">
+        <span class="person-avatar" aria-hidden="true"></span>
+        <div class="person-details">
+          <div class="person-heading">
+            <p class="person-name"></p>
+            <span class="invited-badge">Invited</span>
+          </div>
+          <span class="person-email"></span>
+        </div>
+        <select class="person-permission" aria-label="Permission">
+          <option value="view">Can View</option>
+          <option value="edit">Can Edit</option>
+        </select>
+      </li>
+    </template>
+  </body>
+</html>

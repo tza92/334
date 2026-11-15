@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Manage your games, dashboards, and launch plans with Aggro.">
+    <title>Workspace · Aggro.</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap"
+    >
+    <link rel="stylesheet" href="src/css/styles.css">
+    <script src="src/js/autocomplete.js" defer></script>
+    <script src="src/js/dropdown.js" defer></script>
+    <script src="src/js/projects.js" defer></script>
+    <script src="src/js/common.js" defer></script>
+    <script src="src/js/date-picker.js" defer></script>
+    <script src="src/js/demo-data.js" defer></script>
+    <script src="src/js/workspace.js" defer></script>
+    <script src="src/js/dashboard.js" defer></script>
+    <script src="src/js/goal-filters.js" defer></script>
+    <script src="src/js/milestone-form.js" defer></script>
+    <script src="src/js/milestone-filters.js" defer></script>
+  </head>
+  <body class="workspace-open">
+    <p id="text-completion-hint" class="visually-hidden">Typing any character fills in suggested text. You can then edit it freely.</p>
+
+    <svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <symbol id="arrow" viewBox="0 0 24 24">
+        <path d="M5 12h14m-6-7 7 7-7 7"/>
+      </symbol>
+      <symbol id="plus" viewBox="0 0 24 24">
+        <path d="M12 4v16M4 12h16"/>
+      </symbol>
+      <symbol id="bell" viewBox="0 0 24 24">
+        <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/>
+      </symbol>
+      <symbol id="check" viewBox="0 0 24 24">
+        <path d="m5 12 4 4 10-10"/>
+      </symbol>
+      <symbol id="target" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="9"/>
+        <circle cx="12" cy="12" r="5"/>
+        <circle cx="12" cy="12" r="1"/>
+      </symbol>
+      <symbol id="calendar" viewBox="0 0 24 24">
+        <rect x="4" y="5" width="16" height="16" rx="2"/>
+        <path d="M8 3v4m8-4v4M4 11h16"/>
+      </symbol>
+      <symbol id="edit" viewBox="0 0 24 24"><path d="m15 5 4 4M4 20l4-1L20 7a2.8 2.8 0 0 0-4-4L4 15Z"/></symbol>
+      <symbol id="close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+      <symbol id="chevron-right" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></symbol>
+      <symbol id="trash" viewBox="0 0 24 24"><path d="M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7M14 10v7"/></symbol>
+      <symbol id="link" viewBox="0 0 24 24">
+        <g transform="rotate(-45 12 12)">
+          <path d="M9 7H7a5 5 0 0 0 0 10h2m6-10h2a5 5 0 0 1 0 10h-2M8 12h8"/>
+        </g>
+      </symbol>
+      <symbol id="gamepad" viewBox="0 0 24 24">
+        <path
+          d="M7 6h10c2 0 3 1 3.5 3l1.3 8c.3 1.7-1.6 2.8-2.9 1.7L15 16H9l-3.9 2.7c-1.3 1.1-3.2 0-2.9-1.7l1.3-8C4 7 5 6 7 6ZM8 9v5m-2.5-2.5h5"
+        />
+        <circle cx="16" cy="10" r=".8" fill="currentColor" stroke="none"/>
+        <circle cx="18.5" cy="13" r=".8" fill="currentColor" stroke="none"/>
+      </symbol>
+    </svg>
+
+    <aside id="workspace-sidebar" class="workspace-sidebar" aria-label="Game workspace">
+      <button class="workspace-brand" type="button" data-library aria-label="Aggro — back to games">AG</button>
+      <nav class="workspace-navigation" aria-label="Workspace navigation">
+        <button class="sidebar-link" type="button" data-section="Home" aria-current="page">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="m3 10 9-7 9 7v11H3Z"/>
+            <path d="M9 21v-8h6v8"/>
+          </svg>
+          <span>Home</span>
+        </button>
+        <button class="sidebar-link" type="button" data-section="Analytics">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 3v18h17M8 16v-5m5 5V6m5 10v-3"/>
+          </svg>
+          <span>Analytics</span>
+        </button>
+        <button class="sidebar-link" type="button" data-section="Plan">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="4" y="5" width="16" height="16" rx="2"/>
+            <path d="M8 3v4m8-4v4M4 11h16"/>
+          </svg>
+          <span>Plan</span>
+        </button>
+        <button class="sidebar-link" type="button" data-section="Connect">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M9 3v5m6-5v5M6 8h12v4a6 6 0 0 1-12 0Zm6 10v4"/>
+          </svg>
+          <span>Connect</span>
+        </button>
+        <button class="sidebar-link" type="button" data-section="Settings">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M5 3v7m0 4v7M12 3v11m0 4v3M19 3v3m0 4v11M2 10h6m1 4h6m1-8h6"/>
+          </svg>
+          <span>Settings</span>
+        </button>
+      </nav>
+      <button class="sidebar-link sidebar-return" type="button" data-library aria-label="Back to games">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M10 4H4v16h6m-1-8h12m-5-5 5 5-5 5"/>
+        </svg>
+        <span>Games</span>
+      </button>
+    </aside>
+
+    <header class="site-header">
+      <span id="workspace-header-title" class="workspace-header-title">Home</span>
+      <nav class="account-nav" aria-label="Account">
+        <button
+          class="icon-button notification-button"
+          type="button"
+          aria-label="Notifications"
+        >
+          <svg class="icon" aria-hidden="true"><use href="#bell"/></svg>
+        </button>
+        <button class="avatar" type="button" aria-label="Account for MC">MC</button>
+      </nav>
+    </header>
+
+    <main id="game-workspace" class="game-workspace" aria-labelledby="workspace-page-title">
+      <div class="dashboard-container">
+        <header class="dashboard-intro">
+          <span id="dashboard-game-name" class="game-name-badge"></span>
+          <h1 id="workspace-page-title" tabindex="-1">Welcome <span class="welcome-wave" aria-hidden="true">??</span>
+          </h1>
+          <div id="dashboard-setup-heading" class="dashboard-setup-heading">
+            <h2>Let's get your dashboard ready!</h2>
+            <p id="setup-progress"><strong>1 of 3</strong> complete</p>
+          </div>
+        </header>
+
+        <section id="dashboard-setup" class="setup-grid" aria-label="Get started">
+          <article class="setup-card">
+            <span class="dashboard-icon">
+              <svg class="icon" aria-hidden="true"><use href="#link"/></svg>
+            </span>
+            <h3>
+              Connect Your Platform(s)
+              <svg id="platform-complete" class="icon completion-check" aria-hidden="true" aria-label="Complete">
+                <use href="#check"/>
+              </svg>
+            </h3>
+            <p>Connect your platform to start tracking performance.</p>
+            <button class="button button--primary" type="button" data-dashboard-action="touchpoint">
+              New Touchpoint
+              <svg class="icon" aria-hidden="true"><use href="#plus"/></svg>
+            </button>
+          </article>
+          <article class="setup-card">
+            <span class="dashboard-icon">
+              <svg class="icon" aria-hidden="true"><use href="#target"/></svg>
+            </span>
+            <h3>
+              Set Your First Goal
+              <svg id="goal-complete" class="icon completion-check" aria-hidden="true" aria-label="Complete">
+                <use href="#check"/>
+              </svg>
+            </h3>
+            <p>Choose a metric, then set a target and deadline.</p>
+            <button class="button button--primary" type="button" data-dashboard-action="goal">
+              <span class="setup-action-label">Add a Goal</span>
+              <svg class="icon" aria-hidden="true"><use href="#plus"/></svg>
+            </button>
+          </article>
+          <article class="setup-card is-complete">
+            <span class="dashboard-icon">
+              <svg class="icon" aria-hidden="true"><use href="#gamepad"/></svg>
+            </span>
+            <h3>
+              Add Your Game
+              <svg class="icon completion-check" aria-label="Complete"><use href="#check"/></svg>
+            </h3>
+            <p>Enter your game's name and upload an image to get started.</p>
+            <button class="button button--secondary" type="button" data-dashboard-action="name">Edit Name</button>
+          </article>
+        </section>
+
+        <div class="dashboard-grid">
+          <section id="goals-panel" class="dashboard-panel" aria-labelledby="goals-title">
+            <header class="panel-heading">
+              <h2 id="goals-title">Goals</h2>
+              <div class="panel-actions">
+                <button
+                  id="goals-filter-trigger"
+                  class="dashboard-filter goal-filter-trigger"
+                  type="button"
+                  popovertarget="goals-filter-popup"
+                  aria-haspopup="dialog"
+                  aria-expanded="false"
+                  aria-controls="goals-filter-popup"
+                >
+                  Filter <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+                </button>
+                <div
+                  id="goals-filter-popup"
+                  class="goal-filters-popup"
+                  popover
+                  role="dialog"
+                  aria-label="Filter goals"
+                ></div>
+                <button
+                  class="button panel-add button--primary"
+                  type="button"
+                  data-dashboard-action="goal"
+                  aria-label="Add a goal"
+                >
+                  Add <svg class="icon" aria-hidden="true"><use href="#plus"/></svg>
+                </button>
+              </div>
+            </header>
+            <div id="goals-content" class="panel-content"></div>
+          </section>
+          <section id="milestones-panel" class="dashboard-panel" aria-labelledby="milestones-title">
+            <header class="panel-heading">
+              <h2 id="milestones-title">Upcoming Milestones</h2>
+              <div class="panel-actions">
+                <button
+                  id="milestones-filter-trigger"
+                  class="dashboard-filter goal-filter-trigger"
+                  type="button"
+                  popovertarget="milestones-filter-popup"
+                  aria-haspopup="dialog"
+                  aria-expanded="false"
+                  aria-controls="milestones-filter-popup"
+                >
+                  Filter <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+                </button>
+                <div
+                  id="milestones-filter-popup"
+                  class="milestone-filters-popup"
+                  popover
+                  role="dialog"
+                  aria-label="Filter milestones"
+                ></div>
+                <button
+                  class="button panel-add button--primary"
+                  type="button"
+                  data-dashboard-action="milestone"
+                  aria-label="Add a milestone"
+                >
+                  Add <svg class="icon" aria-hidden="true"><use href="#plus"/></svg>
+                </button>
+              </div>
+            </header>
+            <div id="milestones-content" class="panel-content"></div>
+          </section>
+          <section id="conversion-panel" class="dashboard-panel" aria-labelledby="conversion-title">
+            <header class="panel-heading">
+              <h2 id="conversion-title">Conversion Points</h2>
+              <button class="text-link" type="button" data-dashboard-section="Analytics">View analytics <svg class="icon" aria-hidden="true">
+                <use href="#arrow"/>
+              </svg>
+              </button>
+            </header>
+            <ol class="conversion-funnel" aria-label="Conversion metrics">
+              <li><span>Impressions</span><span>0</span><small>No data yet</small></li>
+              <li><span>Profile / Store clicks</span><span>0</span><small>No data yet</small></li>
+              <li><span>Wishlist / Follow</span><span>0</span><small>No data yet</small></li>
+              <li><span>Patreon Patrons</span><span>0</span><small>No data yet</small></li>
+              <li><span>Merch sales</span><span>0</span><small>No data yet</small></li>
+            </ol>
+          </section>
+          <section id="touchpoints-panel" class="dashboard-panel" aria-labelledby="touchpoints-title">
+            <header class="panel-heading">
+              <h2 id="touchpoints-title">Touchpoint updates</h2>
+              <div class="panel-actions">
+                <select id="touchpoints-filter" class="dashboard-filter" aria-label="Filter touchpoints">
+                  <option value="all">Filter</option>
+                  <option value="post">Posts</option>
+                  <option value="press">Press</option>
+                  <option value="store">Store updates</option>
+                </select>
+                <button
+                  class="button panel-add button--primary"
+                  type="button"
+                  data-dashboard-action="touchpoint"
+                >
+                  <svg class="icon" aria-hidden="true"><use href="#plus"/></svg> Add Touchpoint
+                </button>
+              </div>
+            </header>
+            <div id="touchpoints-content" class="panel-content"></div>
+          </section>
+        </div>
+        <p id="dashboard-status" class="visually-hidden" role="status"></p>
+      </div>
+    </main>
+
+    <dialog id="dashboard-dialog" class="dashboard-dialog" aria-labelledby="dashboard-dialog-title">
+      <button class="dialog-dismiss" type="button" data-close aria-label="Close dialog">
+        <svg class="icon" aria-hidden="true"><use href="#close"/></svg>
+      </button>
+      <form id="dashboard-form">
+        <h2 id="dashboard-dialog-title"></h2>
+        <p id="dashboard-dialog-description" hidden>Set a target for your game and track your progress.</p>
+        <div id="dashboard-form-fields"></div>
+        <div class="wizard-actions">
+          <button id="dashboard-delete" class="button milestone-delete" type="button" hidden><span id="dashboard-delete-label">Delete</span> <svg class="icon" aria-hidden="true"><use href="#trash"/></svg></button>
+          <button id="dashboard-cancel" class="button button--secondary" type="button" data-close>Cancel</button>
+          <button id="dashboard-save" class="button button--primary" type="submit">Save <svg id="goal-save-check" class="icon" hidden aria-hidden="true"><use href="#check"/></svg></button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog
+      id="remove-goal-dialog"
+      class="remove-goal-dialog"
+      aria-labelledby="remove-goal-title"
+      aria-describedby="remove-goal-description"
+    >
+      <span class="remove-goal-icon"><svg class="icon" aria-hidden="true"><use href="#trash"/></svg></span>
+      <h2 id="remove-goal-title">Remove this goal?</h2>
+      <p id="remove-goal-description"></p>
+      <div class="wizard-actions">
+        <button class="button button--secondary" type="button" autofocus data-close>Cancel</button>
+        <button id="confirm-remove-goal" class="button button--danger" type="button">Remove goal</button>
+      </div>
+    </dialog>
+  </body>
+</html>
