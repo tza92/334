@@ -1,0 +1,31 @@
+.notification-button { position: relative; }
+.notification-button[data-unread="true"]::after { content: ""; position: absolute; top: 8px; right: 10px; width: 6px; height: 6px; background: #cc342d; border: 2px solid white; border-radius: 50%; box-sizing: content-box; }
+.notifications-popup { position: fixed; inset: auto; width: min(560px, calc(100vw - 32px)); margin: 0; padding: 24px 16px 0; overflow-y: auto; color: #171b24; background: white; border: 1px solid var(--border); border-radius: 14px; box-shadow: 0 10px 30px #161b3014; }
+.notifications-popup button { padding: 0; font: inherit; text-align: left; background: none; border: 0; }
+.notifications-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin: 0 10px 20px; }
+.notifications-heading h2 { font-size: 25px; font-weight: 500; }
+.notifications-heading button, .notifications-popup footer button { color: var(--purple); font-size: 16px; }
+.notifications-heading button:disabled { color: var(--muted); cursor: default; }
+.notifications-list { display: grid; gap: 4px; }
+.notifications-popup .notification-item { display: flex; align-items: flex-start; gap: 16px; width: 100%; padding: 12px 10px; border-radius: 8px; }
+.notification-item:hover, .notification-item:focus-visible { background: #f7f6ff; }
+.notification-icon { display: grid; flex-shrink: 0; place-items: center; width: 48px; height: 48px; color: var(--purple); background: #eeebff; border-radius: 5px; }
+.notification-icon .icon { width: 25px; height: 25px; }
+.notification-copy { display: grid; flex: 1; min-width: 0; gap: 3px; }
+.notification-copy strong { font-size: 16px; font-weight: 500; line-height: 1.5; overflow-wrap: anywhere; }
+.notification-copy small { color: var(--muted); font-size: 16px; line-height: 1.5; }
+.notification-unread { flex-shrink: 0; width: 10px; height: 10px; margin-top: 5px; background: #cc342d; border-radius: 50%; }
+.notification-item[data-read="true"] .notification-unread { visibility: hidden; }
+.notification-item[data-read="true"] .notification-copy strong { font-weight: 400; }
+.notifications-popup footer { display: flex; justify-content: center; margin-top: 10px; padding: 16px 10px; border-top: 1px solid var(--border); }
+.notifications-empty { padding: 16px 10px 24px; color: var(--muted); font-size: 14px; }
+@media (max-width: 600px) {
+  .notifications-popup { padding-top: 18px; }
+  .notifications-heading { gap: 10px; margin-inline: 4px; }
+  .notifications-heading h2 { font-size: 21px; }
+  .notifications-heading button { font-size: 12px; }
+  .notifications-popup .notification-item { gap: 12px; padding-inline: 4px; }
+  .notification-icon { width: 38px; height: 38px; }
+  .notification-icon .icon { width: 22px; height: 22px; }
+  .notification-copy strong, .notification-copy small { font-size: 13px; }
+}

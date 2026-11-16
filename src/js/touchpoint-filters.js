@@ -1,8 +1,8 @@
 ﻿const touchpointFilterTrigger = document.querySelector("#touchpoints-filter-trigger");
 const touchpointFilterPopup = document.querySelector("#touchpoints-filter-popup");
 const connectionFilterGroups = [
-  { key: "type", label: "Type", options: [["all", "All types"], ["post", "Short-form"], ["press", "Press"], ["store", "Storefront"], ["event", "Event"]] },
-  { key: "platform", label: "Platform", options: [["all", "All platforms"], ["tiktok", "TikTok"], ["instagram", "Instagram"], ["youtube", "YouTube"], ["steam", "Steam"], ["discord", "Discord"]] },
+  { key: "type", label: "Type", options: [["all", "All types"], ["post", "Short-form"], ["devlog", "Devlog"], ["press", "Press"], ["store", "Storefront"], ["community", "Community"], ["event", "Event"]] },
+  { key: "platform", label: "Platform", options: [["all", "All platforms"], ["tiktok", "TikTok"], ["instagram", "Instagram"], ["youtube", "YouTube"], ["steam", "Steam"], ["discord", "Discord"], ["indie games plus", "Indie Games Plus"]] },
 ];
 function touchpointFilterState(card) {
   return card.connectionUpdateFilters ??= { type: "all", platform: "all" };

@@ -3,6 +3,12 @@ const gameGrid = document.querySelector("#game-grid");
 const ownershipFilter = document.querySelector("#ownership");
 const ownershipTrigger = document.querySelector("#ownership-trigger");
 
+document.querySelector(".account-nav .avatar").addEventListener("click", () => {
+  const project = loadProjects().sort((a, b) => (b.openedAt || "").localeCompare(a.openedAt || ""))[0]
+    || createDefaultHollowSignalProject();
+  openProject(project, "Settings");
+});
+
 // Capture the card pattern before interactions change its content.
 const gameCardTemplate = gameGrid.querySelector(".game-card").cloneNode(true);
 const sampleGameCard = gameGrid.querySelector(".game-card");

@@ -1,0 +1,66 @@
+.game-workspace[data-section="Settings"] .dashboard-container { padding: 22px 24px 56px; }
+.game-workspace[data-section="Settings"] .dashboard-intro h1 { font-size: 36px; letter-spacing: -1px; }
+.settings-page { margin-top: 20px; }
+.settings-tabs button, .settings-reveal, .settings-device-row, .settings-toggle { padding: 0; border: 0; background: none; }
+.settings-tabs { position: relative; isolation: isolate; display: flex; width: min(494px, 100%); padding: 4px; background: #eeebff; border-radius: 24px; }
+.settings-tabs::before { position: absolute; z-index: -1; top: 4px; bottom: 4px; left: 4px; width: calc((100% - 8px) / 3); background: var(--purple); border-radius: 18px; content: ""; transform: translateX(calc(var(--settings-tab-index, 0) * 100%)); transition: transform 240ms cubic-bezier(.2, .8, .2, 1); }
+.settings-tabs button { flex: 1; min-width: 0; min-height: 38px; padding: 8px 14px; font-size: 13px; font-weight: 500; border-radius: 18px; transition: color 180ms ease, background-color 180ms ease; }
+.settings-tabs button[aria-selected="true"] { color: white; }
+.settings-tabs button[aria-selected="false"]:hover, .settings-tabs button[aria-selected="false"]:focus-visible { color: #171b24; background: #cfd3da; }
+.settings-panels { display: grid; gap: 16px; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); }
+.settings-card { width: min(680px, 100%); min-width: 0; padding: 22px 20px 20px; background: white; border: 1px solid var(--border); border-radius: 16px; box-shadow: 0 2px 3px #161b3008, 0 5px 10px #161b3006; }
+.settings-card h2 { margin-bottom: 18px; font-size: 27px; line-height: 1.4; font-weight: 500; letter-spacing: -.5px; }
+.settings-picture-row { display: flex; align-items: center; gap: 12px; }
+.settings-avatar { display: grid; flex-shrink: 0; place-items: center; width: 96px; height: 96px; overflow: hidden; color: #4e3de4; font-size: 30px; font-weight: 600; background: #eeebff; border-radius: 50%; }
+.settings-avatar img, .avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: inherit; }
+.settings-picture-row .button { min-height: 36px; padding: 8px 12px; font-size: 13px; }
+.settings-picture-help { margin-top: 14px; font-size: 13px; line-height: 1.6; }
+.settings-row { display: flex; align-items: center; gap: 16px; min-height: 64px; width: 100%; text-align: left; }
+.settings-label { margin-right: auto; color: #626262; font-size: 15px; }
+.settings-value { min-width: 0; overflow-wrap: anywhere; text-align: right; font-size: 13px; }
+.settings-reveal { flex-shrink: 0; color: var(--muted); font-size: 13px; }
+.settings-edit { flex-shrink: 0; width: 32px; height: 32px; border-radius: 8px; }
+.settings-edit .icon { width: 18px; height: 18px; color: var(--muted); }
+.settings-device-row > .icon { width: 20px; height: 20px; color: var(--muted); }
+.settings-device-row:hover .settings-label, .settings-reveal:hover { color: var(--purple); }
+.settings-status { margin-top: 14px; color: var(--muted); font-size: 13px; }
+.settings-footer { width: min(680px, 100%); margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border); }
+.settings-logout { color: #bc332d; }
+.settings-logout:hover { background: #fff3f2; border-color: #bc332d; }
+.settings-tabs button:focus-visible, .settings-row button:focus-visible, .settings-device-row:focus-visible { outline: 2px solid var(--purple); outline-offset: 3px; }
+.settings-project { display: flex; align-items: center; gap: 16px; padding-block: 16px; border-top: 1px solid var(--border); }
+.settings-project-copy { flex: 1; min-width: 0; }
+.settings-project-copy strong { display: block; overflow-wrap: anywhere; font-size: 15px; font-weight: 500; }
+.settings-project-copy small, .settings-note { display: block; margin-top: 5px; color: var(--muted); font-size: 13px; line-height: 1.6; }
+.settings-project .button { min-height: 34px; padding: 6px 12px; font-size: 13px; }
+.settings-toggle-row { gap: 24px; padding-block: 14px; }
+.settings-toggle-row .settings-label { display: block; color: #171b24; }
+.settings-toggle { position: relative; flex-shrink: 0; width: 42px; height: 24px; background: #cbd0de; border-radius: 16px; }
+.settings-toggle { transition: background-color 180ms ease; }
+.settings-reveal, .settings-edit, .settings-device-row, .settings-logout { transition: color 180ms ease, background-color 180ms ease, border-color 180ms ease; }
+.settings-toggle::after { content: ""; position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; background: white; border-radius: 50%; transition: transform 150ms ease; }
+.settings-toggle[aria-checked="true"] { background: var(--purple); }
+.settings-toggle[aria-checked="true"]::after { transform: translateX(18px); }
+@media (prefers-reduced-motion: reduce) { .settings-tabs::before, .settings-tabs button, .settings-toggle, .settings-toggle::after, .settings-reveal, .settings-edit, .settings-device-row, .settings-logout { transition: none; } }
+.settings-dialog { width: min(460px, calc(100% - 32px)); max-height: calc(100dvh - 48px); padding: 24px; color: #171b24; border: 1px solid var(--border); border-radius: 16px; }
+.settings-dialog::backdrop { background: #171b2466; }
+.settings-dialog h2 { margin-bottom: 16px; font-size: 24px; font-weight: 500; }
+.settings-dialog label { display: grid; gap: 8px; font-size: 14px; }
+.settings-dialog input { width: 100%; min-height: 44px; padding: 10px 12px; font: inherit; border: 1px solid var(--border); border-radius: 8px; }
+.settings-dialog footer { display: flex; justify-content: flex-end; gap: 10px; margin-top: 24px; }
+@media (max-width: 600px) {
+  .game-workspace[data-section="Settings"] .dashboard-container { padding: 22px 16px 40px; }
+  .game-workspace[data-section="Settings"] .dashboard-intro h1 { font-size: 30px; }
+  .settings-tabs button { padding-inline: 8px; font-size: 12px; }
+  .settings-card { padding: 20px 16px; }
+  .settings-card h2 { font-size: 22px; }
+  .settings-avatar { width: 68px; height: 68px; font-size: 24px; }
+  .settings-picture-help { margin-top: 10px; font-size: 11px; }
+  .settings-row { flex-wrap: wrap; gap: 10px; padding-block: 14px; }
+  .settings-row > .settings-label { flex-basis: 100%; }
+  .settings-row > .settings-value { margin-right: auto; text-align: left; }
+  .settings-row > .settings-edit:only-of-type { margin-left: auto; }
+  .settings-device-row > .settings-label { flex-basis: auto; }
+  .settings-project { flex-wrap: wrap; gap: 10px; }
+  .settings-project-copy { flex-basis: calc(100% - 50px); }
+}

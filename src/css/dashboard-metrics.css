@@ -48,10 +48,26 @@
 }
 .game-workspace[data-setup-finished="false"] .metrics-card .metrics-card-updated { opacity: 1; }
 .game-workspace[data-setup-finished="false"] .metrics-card .metrics-card-link { opacity: 0; }
-.metrics-carousel::before, .metrics-carousel::after { position: absolute; z-index: 1; top: 0; bottom: 0; width: 54px; pointer-events: none; content: ""; }
-.metrics-carousel::before { left: 0; background: linear-gradient(to right, #f6f7f9, #f6f7f900); }
-.metrics-carousel::after { right: 0; background: linear-gradient(to left, #f6f7f9, #f6f7f900); }
-.metrics-carousel[data-start="true"]::before, .metrics-carousel[data-end="true"]::after { display: none; }
+/* Fade the full scroll viewport, including its shadow gutters, into the page. */
+@property --metrics-fade-start {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+@property --metrics-fade-end {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+.metrics-track {
+  --metrics-fade-start: transparent;
+  --metrics-fade-end: transparent;
+  -webkit-mask-image: linear-gradient(to right, var(--metrics-fade-start), #000 54px, #000 calc(100% - 54px), var(--metrics-fade-end));
+  mask-image: linear-gradient(to right, var(--metrics-fade-start), #000 54px, #000 calc(100% - 54px), var(--metrics-fade-end));
+  transition: --metrics-fade-start 240ms ease, --metrics-fade-end 240ms ease;
+}
+.metrics-carousel[data-start="true"] .metrics-track { --metrics-fade-start: #000; }
+.metrics-carousel[data-end="true"] .metrics-track { --metrics-fade-end: #000; }
 .metrics-arrow { position: absolute; z-index: 2; top: calc(50% - 26px); display: grid; place-items: center; width: 40px; height: 40px; padding: 0; background: white; border: 1px solid #cbd0de; border-radius: 50%; box-shadow: 0 2px 4px #161b3012; }
 .metrics-arrow--previous { left: -20px; }
 .metrics-arrow--next { right: -20px; }
@@ -68,5 +84,5 @@
   .metrics-arrow--next { right: -12px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .metrics-card, .metrics-pagination button { transition: none; }
+  .metrics-track, .metrics-card, .metrics-pagination button { transition: none; }
 }

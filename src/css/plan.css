@@ -1,0 +1,248 @@
+.game-workspace[data-section="Plan"] .dashboard-container { padding: 22px 24px 56px; }
+.game-workspace[data-section="Plan"] .dashboard-intro h1 { padding-right: 180px; font-size: 36px; letter-spacing: -1px; }
+.plan-page { position: relative; display: grid; gap: 24px; margin-top: 20px; }
+.plan-heading { position: absolute; right: 6px; top: -62px; }
+.plan-heading .button { min-height: 36px; padding: 6px 14px; font-size: 13px; }
+.plan-milestone-overview { display: grid; grid-template-columns: 35% minmax(0, 1fr); overflow: hidden; background: white; border: 1px solid var(--border); border-radius: 16px; }
+.plan-milestone-summary { padding: 32px 36px; background: #eeebff; }
+.plan-milestone-summary h2, .plan-milestone-goals > h2 { font-size: 23px; line-height: 1.4; font-weight: 600; }
+.plan-milestone-summary h2 { text-transform: uppercase; overflow-wrap: anywhere; }
+.plan-countdown { display: flex; align-items: baseline; gap: 16px; margin: 4px 0; font-size: 24px; font-weight: 600; }
+.plan-countdown strong { color: #4c3dd1; font-size: 84px; line-height: 1.2; }
+.plan-milestone-date { display: inline-block; margin-top: 8px; font-size: 23px; text-decoration: underline; text-underline-offset: 3px; }
+.plan-milestone-goals { min-width: 0; padding: 32px 36px; }
+.plan-milestone-goals > h2 { margin-bottom: 18px; text-transform: uppercase; }
+.plan-goal-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 26px; }
+.plan-goal-badge { display: inline-block; padding: 5px 10px; color: var(--purple); font-size: 11px; font-weight: 600; background: #eeebff; border-radius: 20px; }
+.plan-goal-value { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px; margin: 5px 0; font-size: 20px; color: #626262; }
+.plan-goal-value strong { color: #10131c; font-size: 36px; font-weight: 600; letter-spacing: -1px; }
+.plan-goal progress { display: block; width: 100%; height: 8px; overflow: hidden; appearance: none; border: 0; border-radius: 8px; background: #cdd1db; }
+.plan-goal progress::-webkit-progress-bar { background: #cdd1db; border-radius: 8px; }
+.plan-goal progress::-webkit-progress-value { background: var(--purple); border-radius: 8px; }
+.plan-goal progress::-moz-progress-bar { background: var(--purple); border-radius: 8px; }
+.plan-goal-detail { display: flex; justify-content: space-between; gap: 8px; margin-top: 7px; color: #626262; font-size: 11px; }
+.plan-calendar-panel { display: grid; grid-template-columns: 1.52fr 1fr; gap: 34px; padding: 32px; background: white; border: 1px solid var(--border); border-radius: 16px; box-shadow: 0 2px 5px #161b300c; }
+.plan-calendar, .plan-agenda { min-width: 0; }
+.plan-calendar-heading { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 20px; }
+.plan-calendar-heading h2 { font-size: 34px; font-weight: 600; letter-spacing: -.7px; }
+.plan-month-controls { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+.plan-add-trigger { min-height: 38px; padding: 6px 12px; font-size: 13px; }
+#plan-add-menu .filter-option .icon { visibility: visible; }
+#plan-add-menu .filter-option { gap: 24px; padding: 11px 12px; }
+.plan-month-controls .icon-button { width: 38px; height: 38px; border: 1px solid #cbd0de; border-radius: 6px; }
+.plan-weekdays, .plan-days { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; }
+.plan-weekdays { margin-bottom: 20px; font-size: 18px; text-align: center; }
+.plan-day { display: flex; flex-direction: column; align-items: flex-start; justify-content: space-between; gap: 14px; min-width: 0; min-height: 72px; padding: 8px 10px; text-align: left; background: white; border: 1px solid #cbd0de; border-radius: 3px; }
+.plan-day--outside { color: #9d98ad; background: #e3e0ed; border-color: #e3e0ed; }
+.plan-day--populated { background: #f7f6ff; }
+.plan-day[aria-pressed="true"] { border-color: var(--purple); box-shadow: inset 0 0 0 1px var(--purple); }
+.plan-day--today > span:first-child { color: var(--purple); font-weight: 600; }
+.plan-day:hover { border-color: var(--purple); }
+.plan-day:focus-visible, .plan-agenda-item:focus-visible, .plan-opportunity-card button:focus-visible { outline: 2px solid var(--purple); outline-offset: 2px; }
+.plan-day-dots { display: flex; flex-wrap: wrap; gap: 3px; }
+.plan-dot { display: inline-block; flex-shrink: 0; width: 11px; height: 11px; background: var(--plan-category-color); border-radius: 50%; }
+.plan-day-dots .plan-dot { width: 8px; height: 8px; }
+[data-plan-category="milestone"] { --plan-category-color: #f3df00; }
+[data-plan-category="goal"] { --plan-category-color: #4bd0fa; }
+[data-plan-category="event"] { --plan-category-color: #ff8500; }
+[data-plan-category="fund"] { --plan-category-color: #1a915b; }
+.plan-legend { display: flex; flex-wrap: wrap; gap: 12px 18px; margin: 8px 0 18px; font-size: 14px; }
+.plan-legend > span { display: flex; align-items: center; gap: 6px; }
+.plan-agenda-list { display: grid; gap: 12px; max-height: 530px; overflow-y: auto; }
+.plan-agenda-group { padding: 16px 18px; border: 1px solid #d3d7e2; border-radius: 8px; }
+.plan-agenda-group h3 { margin-bottom: 4px; font-size: 13px; font-weight: 600; text-transform: uppercase; }
+.plan-agenda-item { display: flex; align-items: baseline; gap: 10px; width: 100%; padding: 3px 0; font-size: 14px; text-align: left; background: none; border: 0; }
+.plan-agenda-item .plan-dot { width: 10px; height: 10px; }
+.plan-agenda-item:hover { color: var(--purple); }
+#plan-show-month { margin-top: 12px; }
+.plan-record-panels { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: 30px; }
+.plan-record-panels #milestones-panel, .plan-record-panels #touchpoints-panel { height: auto; min-height: 0; }
+.plan-record-panels #milestones-content, .plan-record-panels #touchpoints-content { max-height: 510px; overflow-y: auto; }
+.plan-record-panels .panel-heading { margin-bottom: 20px; }
+.plan-record-panels .panel-heading h2 { font-size: 26px; }
+.plan-opportunities > h2 { margin: 0 0 22px; font-size: 34px; font-weight: 600; letter-spacing: -.6px; }
+.plan-opportunity-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 26px; padding: 0 36px 8px; }
+.plan-opportunity-card { position: relative; display: flex; flex-direction: column; gap: 10px; min-width: 0; padding: 14px 18px; background: white; border: 1px solid var(--border); border-radius: 7px; box-shadow: 0 3px 8px #161b3010; }
+.plan-opportunity-countdown { align-self: flex-start; margin-right: 24px; padding: 3px 12px; color: #a26c12; font-size: 10px; background: #fff3df; border-radius: 3px; }
+.plan-opportunity-bookmark { position: absolute; top: 11px; right: 12px; display: grid; place-items: center; padding: 0; color: #626a7a; background: none; border: 0; }
+.plan-opportunity-bookmark[aria-pressed="true"] { color: var(--purple); }
+.plan-opportunity-bookmark[aria-pressed="true"] svg { fill: currentColor; }
+.plan-opportunity-bookmark svg { width: 20px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.2; }
+.plan-opportunity-heading { display: flex; align-items: flex-start; gap: 12px; padding: 0; text-align: left; background: none; border: 0; }
+.plan-opportunity-heading .milestone-date-tile { flex-shrink: 0; }
+.plan-opportunity-heading small { display: block; margin-bottom: 4px; color: #626262; font-size: 10px; font-weight: 500; text-transform: uppercase; }
+.plan-opportunity-heading strong { display: block; font-size: 13px; font-weight: 600; line-height: 1.3; }
+.plan-opportunity-copy { display: grid; gap: 4px; color: #626262; font-size: 11px; }
+.plan-opportunity-card footer { margin-top: auto; padding-top: 8px; font-size: 10px; border-top: 1px solid #cbd0de; }
+.plan-find-more { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; min-height: 190px; padding: 18px; background: white; border: 1px dashed #cbd0de; border-radius: 7px; }
+.plan-find-more > span { display: grid; place-items: center; width: 44px; height: 44px; margin-bottom: 8px; color: var(--purple); font-size: 30px; background: #eeebff; border-radius: 50%; }
+.plan-find-more strong { font-size: 13px; }
+.plan-find-more small { color: #626262; font-size: 11px; }
+.plan-empty { padding: 20px 0; color: var(--muted); font-size: 14px; line-height: 1.7; }
+.plan-opportunity-dialog { width: min(600px, calc(100% - 32px)); max-height: 85dvh; padding: 26px; overflow-y: auto; border: 1px solid var(--border); border-radius: 16px; }
+.plan-opportunity-dialog::backdrop { background: #161b3066; }
+.plan-opportunity-dialog > header { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 18px; }
+.plan-opportunity-dialog h2 { font-size: 24px; }
+.plan-opportunity-dialog p { margin-bottom: 16px; color: var(--muted); font-size: 14px; }
+.plan-discover-list { display: grid; gap: 12px; }
+.plan-discover-item { display: grid; gap: 8px; padding: 16px; border: 1px solid var(--border); border-radius: 8px; }
+.plan-discover-item .button { justify-self: start; min-height: 34px; font-size: 12px; }
+.plan-milestone-date { padding: 0; color: inherit; text-align: left; background: none; border: 0; transition: color 180ms ease; }
+.plan-milestone-date:hover, .plan-milestone-date:focus-visible { color: var(--purple); }
+.plan-selection { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; padding: 12px 18px; color: var(--purple); font-size: 15px; background: #eeebff; border-radius: 8px; }
+.plan-selection button { display: flex; align-items: center; gap: 6px; padding: 0; color: inherit; background: none; border: 0; }
+.plan-selection .icon { width: 18px; height: 18px; }
+.plan-agenda-group { transition: color 180ms ease, background-color 180ms ease, border-color 180ms ease; }
+.plan-agenda-group:hover, .plan-agenda-group:focus-within { color: var(--purple); border-color: var(--purple); }
+.plan-agenda-item { color: inherit; }
+.plan-agenda-group.is-selected { color: var(--purple); background: #eeebff; border-color: var(--purple); }
+.plan-day[aria-pressed="true"] { color: var(--purple); background: #f7f6ff; box-shadow: none; }
+#plan-show-month { display: none; }
+.plan-opportunity-card { transition: background-color 180ms ease, border-color 180ms ease, box-shadow 180ms ease; }
+.plan-opportunity-card:hover, .plan-opportunity-card:focus-within { background: #f7f8fa; border-color: #cbd0de; box-shadow: 0 3px 10px #161b3018; }
+.plan-opportunity-card:hover .plan-opportunity-heading strong, .plan-opportunity-card:focus-within .plan-opportunity-heading strong { color: var(--purple); }
+.plan-opportunity-heading::after { position: absolute; inset: 0; content: ""; border-radius: 7px; }
+.plan-opportunity-bookmark { z-index: 1; }
+[data-urgency="soon"] .plan-opportunity-countdown { color: #df2414; background: #ffeded; }
+[data-urgency="upcoming"] .plan-opportunity-countdown { color: #a86700; background: #fff4e1; }
+[data-urgency="later"] .plan-opportunity-countdown { color: #5f6675; background: #e3e5ec; }
+.plan-find-more { transition: color 180ms ease, background-color 180ms ease, border-color 180ms ease; }
+.plan-find-more:hover, .plan-find-more:focus-visible { color: var(--purple); background: #eeebff; border-color: var(--purple); }
+.plan-find-more:hover small, .plan-find-more:focus-visible small { color: var(--purple); }
+.plan-find-more:hover > span, .plan-find-more:focus-visible > span { background: white; }
+.plan-disclosure { overflow: hidden; border: 1px solid var(--border); border-radius: 8px; }
+.plan-disclosure > summary { width: 100%; cursor: pointer; list-style: none; border: 0; border-radius: 0; }
+.plan-disclosure > summary::-webkit-details-marker { display: none; }
+.plan-disclosure > summary:hover, .plan-disclosure > summary:focus-visible, .plan-disclosure[open] > summary { background: #f7f8fa; }
+.plan-disclosure > summary:hover .milestone-row-title, .plan-disclosure > summary:hover .connection-update-title,
+.plan-disclosure > summary:focus-visible .milestone-row-title, .plan-disclosure > summary:focus-visible .connection-update-title,
+.plan-disclosure[open] .milestone-row-title, .plan-disclosure[open] .connection-update-title { color: var(--purple); }
+.plan-disclosure > summary > .icon { transition: transform 180ms ease; }
+.plan-disclosure[open] > summary > .icon { color: var(--purple); transform: rotate(90deg); }
+.plan-disclosure[open] > summary { border-bottom: 1px solid var(--border); }
+.plan-disclosure-panel { padding: 20px; }
+.plan-disclosure[open] .plan-disclosure-panel { animation: plan-panel-reveal 180ms ease; }
+.plan-disclosure-panel h3 { color: #34363c; font-size: 14px; font-weight: 600; text-transform: uppercase; }
+.plan-linked-goal { display: grid; grid-template-columns: minmax(0, 1fr) 36px; align-items: center; gap: 18px; margin-top: 22px; }
+.plan-linked-goal-caption { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 4px 12px; margin-bottom: 7px; font-size: 13px; }
+.plan-linked-goal progress { display: block; width: 100%; height: 8px; appearance: none; overflow: hidden; background: #cdd1db; border: 0; border-radius: 8px; }
+.plan-linked-goal progress::-webkit-progress-bar { background: #cdd1db; }
+.plan-linked-goal progress::-webkit-progress-value { background: var(--purple); border-radius: 8px; }
+.plan-linked-goal progress::-moz-progress-bar { background: var(--purple); }
+.plan-linked-goal .icon-button, .plan-analytics-heading .icon-button { width: 36px; height: 36px; color: var(--muted); border: 1px solid #cbd0de; border-radius: 8px; }
+.plan-disclosure-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 12px; margin-top: 26px; }
+.plan-disclosure-actions .button { min-height: 36px; padding: 7px 12px; font-size: 12px; }
+.plan-analytics-heading { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 16px; }
+.plan-analytics-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.plan-analytics-card { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; min-width: 0; padding: 18px; overflow-wrap: anywhere; color: var(--muted); font-size: 16px; border: 1px solid var(--border); border-radius: 10px; box-shadow: 0 2px 5px #161b300c; }
+.plan-analytics-card strong { color: #171b24; font-size: 29px; font-weight: 600; }
+.plan-analytics-card small { font-size: 11px; }
+.plan-analytics-card .is-positive { color: #14975b; }
+.plan-disclosure-panel > .text-link { display: inline-flex; align-items: center; gap: 6px; margin-top: 16px; }
+.plan-record-panels #milestones-content, .plan-record-panels #touchpoints-content { max-height: 640px; }
+.plan-detail-dialog { width: min(800px, calc(100% - 32px)); max-height: 94dvh; padding: 48px 52px 40px; border: 1px solid #171b24; border-radius: 22px; }
+.plan-detail-dialog > header { display: block; margin-bottom: 0; }
+.plan-detail-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 32px; }
+.plan-detail-controls { display: flex; align-items: center; gap: 20px; }
+.plan-detail-controls .plan-opportunity-bookmark { position: static; }
+.plan-detail-controls .plan-opportunity-bookmark svg { width: 30px; height: 36px; }
+.plan-detail-controls .icon-button, .plan-search-dialog > header .icon-button { width: 42px; height: 42px; border: 1px solid #171b24; border-radius: 9px; }
+.plan-detail-toolbar .plan-opportunity-countdown { margin: 0; padding: 9px 16px; font-size: 16px; }
+.plan-detail-heading { display: flex; align-items: flex-start; gap: 26px; padding-bottom: 28px; border-bottom: 1px solid var(--border); }
+.plan-detail-heading .milestone-date-tile { flex-shrink: 0; width: 94px; height: 104px; background: #eeebff; border-radius: 16px; }
+.plan-detail-heading .milestone-date-tile span { font-size: 16px; }
+.plan-detail-heading .milestone-date-tile strong { font-size: 38px; }
+.plan-detail-heading > div { min-width: 0; padding-top: 16px; }
+.plan-detail-heading small { display: block; margin-bottom: 8px; color: #626575; font-size: 14px; text-transform: uppercase; letter-spacing: .5px; }
+.plan-detail-heading h2 { font-size: 34px; line-height: 1.25; font-weight: 600; overflow-wrap: anywhere; }
+.plan-detail-about, .plan-detail-section { margin-top: 28px; }
+.plan-detail-dialog h3 { margin-bottom: 12px; color: var(--purple); font-size: 14px; font-weight: 500; text-transform: uppercase; letter-spacing: .8px; }
+.plan-detail-about p { margin: 0; color: #343541; font-size: 18px; line-height: 1.7; }
+.plan-detail-table { overflow: hidden; border: 1px solid var(--border); border-radius: 14px; }
+.plan-detail-table > div { display: grid; grid-template-columns: 30% minmax(0, 1fr); gap: 18px; padding: 16px 20px; font-size: 16px; }
+.plan-detail-table > div + div { border-top: 1px solid var(--border); }
+.plan-detail-table dt { display: flex; align-items: center; gap: 14px; color: #626575; }
+.plan-detail-table dd { margin: 0; font-weight: 500; overflow-wrap: anywhere; }
+.plan-detail-table .icon { flex-shrink: 0; width: 20px; height: 20px; }
+.plan-detail-footer { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-top: 28px; padding-top: 24px; border-top: 1px solid var(--border); }
+.plan-remove { min-height: 44px; padding: 10px 16px; color: #df2414; background: white; border: 1px solid #cbd0de; border-radius: 8px; }
+.plan-see-more { min-height: 48px; padding: 10px 22px; color: var(--purple); text-decoration: none; background: white; border: 1.5px solid var(--purple); border-radius: 16px; }
+.plan-source-note { color: var(--muted); font-size: 12px; }
+.plan-search-dialog { width: min(800px, calc(100% - 32px)); padding: 32px 36px; border: 1px solid #171b24; border-radius: 22px; }
+.plan-search-dialog > header { margin-bottom: 8px; }
+.plan-search-dialog h2 { font-size: 32px; font-weight: 500; }
+.plan-search-dialog > p { margin-bottom: 26px; font-size: 16px; }
+.plan-search-label { display: block; margin-bottom: 12px; color: #626262; font-size: 18px; }
+.plan-search-input { width: 100%; min-height: 52px; padding: 12px 18px; font: inherit; border: 1px solid #cbd0de; border-radius: 9px; }
+.plan-search-input::placeholder { color: #929bad; }
+.plan-search-dialog .plan-discover-list:not(:empty) { margin-top: 20px; }
+.plan-search-footer { display: flex; justify-content: flex-end; margin-top: 24px; }
+.plan-touchpoint-form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.plan-editor-field { display: flex; flex-direction: column; gap: 8px; min-width: 0; color: var(--muted); font-size: 13px; }
+.plan-editor-field input, .plan-editor-field select { width: 100%; min-height: 42px; padding: 10px 12px; color: #171b24; font: inherit; background: white; border: 1px solid #cbd0de; border-radius: 7px; }
+.plan-analytics-editor, .plan-touchpoint-form > footer { grid-column: 1 / -1; }
+.plan-analytics-editor { min-width: 0; padding: 16px; border: 1px solid var(--border); border-radius: 8px; }
+.plan-analytics-editor legend { padding: 0 6px; font-size: 14px; }
+.plan-analytics-editor-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.plan-analytics-editor-row + .plan-analytics-editor-row { margin-top: 16px; }
+@keyframes plan-panel-reveal { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) {
+  .plan-page *, .plan-disclosure-panel { animation: none !important; transition: none !important; }
+}
+@media (max-width: 1150px) {
+  .plan-milestone-overview { grid-template-columns: 1fr; }
+  .plan-milestone-summary { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 28px; }
+  .plan-milestone-summary h2 { flex-basis: 100%; }
+  .plan-countdown strong { font-size: 62px; }
+  .plan-calendar-panel { grid-template-columns: 1.4fr 1fr; gap: 20px; padding: 24px; }
+  .plan-calendar-heading h2 { font-size: 27px; }
+  .plan-month-controls { gap: 8px; }
+  .plan-opportunity-grid { gap: 16px; padding-inline: 0; }
+  .plan-record-panels { gap: 20px; }
+  .plan-record-panels .panel-heading h2 { font-size: 21px; }
+}
+@media (max-width: 850px) {
+  .plan-calendar-panel, .plan-record-panels { grid-template-columns: 1fr; }
+  .plan-agenda-list { max-height: 340px; }
+  .plan-opportunity-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 520px) {
+  .plan-detail-dialog, .plan-search-dialog { padding: 22px; border-radius: 16px; }
+  .plan-detail-toolbar { margin-bottom: 22px; }
+  .plan-detail-controls { gap: 12px; }
+  .plan-detail-toolbar .plan-opportunity-countdown { padding: 8px 10px; font-size: 12px; }
+  .plan-detail-heading { gap: 16px; }
+  .plan-detail-heading .milestone-date-tile { width: 66px; height: 80px; }
+  .plan-detail-heading .milestone-date-tile strong { font-size: 28px; }
+  .plan-detail-heading .milestone-date-tile span { font-size: 12px; }
+  .plan-detail-heading > div { padding-top: 4px; }
+  .plan-detail-heading small { font-size: 11px; }
+  .plan-detail-heading h2 { font-size: 24px; }
+  .plan-detail-about p { font-size: 15px; }
+  .plan-detail-table > div { grid-template-columns: 1fr; gap: 7px; padding: 12px; font-size: 14px; }
+  .plan-detail-table dd { padding-left: 34px; }
+  .plan-see-more, .plan-remove { min-height: 40px; padding: 8px 12px; font-size: 13px; border-radius: 8px; }
+  .plan-analytics-grid { gap: 10px; }
+  .plan-analytics-card { gap: 8px; padding: 12px; font-size: 12px; }
+  .plan-analytics-card strong { font-size: 23px; }
+  .plan-analytics-card small { font-size: 10px; }
+  .plan-disclosure-panel { padding: 14px; }
+  .plan-touchpoint-form, .plan-analytics-editor-row { grid-template-columns: 1fr; }
+  .game-workspace[data-section="Plan"] .dashboard-container { padding: 24px 16px 40px; }
+  .game-workspace[data-section="Plan"] .dashboard-intro h1 { padding-right: 0; font-size: 29px; }
+  .plan-heading { position: static; justify-self: end; }
+  .plan-page { gap: 18px; margin-top: 12px; }
+  .plan-milestone-summary, .plan-milestone-goals { padding: 22px; }
+  .plan-milestone-summary h2, .plan-milestone-goals > h2 { font-size: 18px; }
+  .plan-milestone-date { font-size: 18px; }
+  .plan-goal-grid { gap: 18px; }
+  .plan-calendar-panel { padding: 18px 12px; }
+  .plan-calendar-heading h2 { font-size: 23px; }
+  .plan-weekdays { margin-bottom: 10px; font-size: 12px; }
+  .plan-day { min-height: 55px; padding: 5px; font-size: 12px; }
+  .plan-day-dots { gap: 2px; }
+  .plan-day-dots .plan-dot { width: 6px; height: 6px; }
+  .plan-legend { gap: 12px; font-size: 12px; }
+  .plan-opportunities > h2 { font-size: 28px; }
+  .plan-opportunity-grid { grid-template-columns: 1fr; }
+}

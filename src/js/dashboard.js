@@ -51,7 +51,8 @@ function dashboardButton(label, action, primary = false) {
   const button = document.createElement("button");
   button.type = "button";
   button.className = primary ? "button button--primary" : "text-link";
-  if (action === "touchpoint") button.dataset.dashboardSection = "Connect";
+  if (action === "touchpoint" && gameWorkspace.dataset.section === "Plan") button.addEventListener("click", () => openPlanTouchpointEditor());
+  else if (action === "touchpoint") button.dataset.dashboardSection = "Connect";
   else button.dataset.dashboardAction = action;
   button.append(label, dashboardIcon(primary ? "plus" : "arrow"));
   return button;
@@ -135,6 +136,7 @@ function renderGoalRecord(record) {
 }
 
 function renderMilestoneRecord(record) {
+  if (gameWorkspace.dataset.section === "Plan") return renderPlanMilestoneRow(record);
   const date = new Date(`${record.date}T12:00:00`);
   const difference = record.demo && Number.isFinite(record.demoDaysUntil) ? record.demoDaysUntil : Math.round((Date.parse(`${record.date}T00:00:00Z`) - Date.parse(`${localDateKey()}T00:00:00Z`)) / 86400000);
   const item = document.createElement("li");
@@ -170,7 +172,7 @@ function renderMilestoneRecord(record) {
 }
 
 function renderPlanningRecords(kind, records, content) {
-  const limit = kind === "goals" ? 4 : 5;
+  const limit = gameWorkspace.dataset.section === "Plan" ? records.length : kind === "goals" ? 4 : 5;
   const ordered = kind === "milestones" ? [...records].sort((a, b) => a.date.localeCompare(b.date)) : records;
   const visible = ordered.slice(0, limit);
   const list = document.createElement("ul");
@@ -186,14 +188,16 @@ function renderPlanningRecords(kind, records, content) {
   viewAll.className = "text-link";
   viewAll.dataset.dashboardSection = "Plan";
   viewAll.append("View all", dashboardIcon("arrow"));
-  footer.append(viewAll);
+  if (gameWorkspace.dataset.section !== "Plan") footer.append(viewAll);
   content.append(list, footer);
 }
 
 function renderDashboardRecords(kind, records) {
-  if (kind === "touchpoints" && !hasDashboardConnections(activeProject)) records = [];
+  if (kind === "touchpoints" && !hasDashboardConnections(activeProject)) records = gameWorkspace.dataset.section === "Plan" ? records.filter((record) => !record.demo) : [];
   const content = document.querySelector(`#${kind}-content`);
-  const config = dashboardEmptyStates[kind];
+  const config = kind === "touchpoints" && gameWorkspace.dataset.section === "Plan"
+    ? { icon: "megaphone", title: "No connections yet", description: "Add a post, press feature or store update to track its performance.", action: "touchpoint", label: "Add Connection", primary: true }
+    : dashboardEmptyStates[kind];
   let filtered = kind === "goals" ? filterGoalRecords(records, activeProject)
     : kind === "milestones" ? filterMilestoneRecords(records, activeProject)
     : filterTouchpointRecords(records, activeProject);
@@ -222,6 +226,10 @@ function renderDashboardRecords(kind, records) {
   const list = document.createElement("ul");
   list.className = "connection-updates";
   [...filtered].sort((a, b) => b.date.localeCompare(a.date)).forEach((record) => {
+    if (gameWorkspace.dataset.section === "Plan") {
+      list.append(renderPlanTouchpointRecord(record));
+      return;
+    }
     const item = document.createElement("li");
     const row = document.createElement(record.url ? "a" : "button");
     row.className = "connection-update";
@@ -249,7 +257,7 @@ function renderDashboardRecords(kind, records) {
     detail.textContent = record.summary || "Performance updates will appear here.";
     const time = document.createElement("span");
     time.className = "connection-update-time";
-    time.textContent = record.relativeTime || dashboardDate(record.date);
+    time.textContent = connectionRecordTime(record);
     body.append(category, title, detail);
     row.append(icon, body, time, dashboardIcon("chevron-right"));
     item.append(row);
@@ -388,6 +396,7 @@ function renderDashboard(card, section) {
   gameWorkspace.dataset.section = section;
   const data = gameDashboardData(card);
   if (hasDashboardConnections(card)) extendConnectionDemo(card);
+  syncConnectionDemoContent(card);
   renderConversionMetrics(card);
   const name = card.name;
   const home = section === "Home";
@@ -408,9 +417,9 @@ function renderDashboard(card, section) {
 
   const panels = {
     goals: home,
-    milestones: home,
+    milestones: home || section === "Plan",
     conversion: home,
-    touchpoints: home,
+    touchpoints: home || section === "Plan",
   };
   Object.entries(panels).forEach(([name, visible]) => {
     document.querySelector(`#${name}-panel`).hidden = !visible;
@@ -418,6 +427,7 @@ function renderDashboard(card, section) {
   Object.keys(dashboardEmptyStates).forEach((kind) => renderDashboardRecords(kind, data[kind]));
   renderDashboardMetrics(card, section);
   renderHomeSetup(card, section);
+  renderPlanPage(card, section);
 }
 
 gameWorkspace.addEventListener("workspace:revealed", () => {
@@ -856,7 +866,7 @@ document.querySelector("#dashboard-delete").addEventListener("click", () => {
   const name = editingMilestone.title;
   data.milestones = data.milestones.filter((record) => record !== editingMilestone);
   dashboardDialog.close();
-  selectWorkspaceSection("Home");
+  selectWorkspaceSection(gameWorkspace.dataset.section);
   document.querySelector("#dashboard-status").textContent = `${name} deleted.`;
   editingMilestone = null;
 });

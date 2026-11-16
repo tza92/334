@@ -6,10 +6,11 @@ const workspaceQuery = new URLSearchParams(window.location.search);
 const activeProject = loadProjects().find((project) => project.id === workspaceQuery.get("project"))
   || (workspaceQuery.get("project") === "hollow-signal" ? createDefaultHollowSignalProject()
     : { id: "blank", name: "Untitled game", temporary: true, setupFinished: false });
-const setupRestrictedSections = new Set(["Analytics", "Plan", "Settings"]);
+const setupRestrictedSections = new Set(["Analytics", "Plan"]);
 
 function syncWorkspaceSetupNavigation() {
   gameWorkspace.dataset.dashboardState = activeProject.setupFinished ? "finished" : "setup";
+  syncWorkspaceNotifications();
   document.querySelectorAll("#workspace-sidebar [data-section], #game-workspace [data-dashboard-section]").forEach((button) => {
     const disabled = !activeProject.setupFinished && setupRestrictedSections.has(button.dataset.section || button.dataset.dashboardSection);
     button.disabled = disabled;
@@ -66,24 +67,31 @@ function selectWorkspaceSection(section) {
   renderDashboard(activeProject, section);
   syncWorkspaceSetupNavigation();
   const connect = section === "Connect";
-  const inProgress = ["Analytics", "Plan", "Settings"].includes(section);
+  const plan = section === "Plan";
+  const settings = section === "Settings";
+  const analytics = section === "Analytics";
+  const inProgress = false;
   gameWorkspace.classList.toggle("has-placeholder", inProgress);
   document.querySelector("#workspace-in-progress").hidden = !inProgress;
   document.querySelector("#workspace-in-progress-title").textContent = `${section} is currently in progress`;
   document.querySelector(".dashboard-grid").hidden = section !== "Home";
   document.querySelector("#connections-page").hidden = !connect;
-  document.querySelector("#dashboard-game-name").hidden = connect || inProgress;
+  document.querySelector("#dashboard-game-name").hidden = connect || plan || settings || analytics;
+  renderSettingsPage(settings);
+  if (typeof renderAnalyticsPage === "function") renderAnalyticsPage(analytics);
   workspaceHeaderTitle.replaceChildren();
-  if (connect) {
+  if (section !== "Home") {
     const home = document.createElement("button");
     home.type = "button";
     home.className = "workspace-breadcrumb-home";
     home.textContent = "Home";
     home.addEventListener("click", () => selectWorkspaceSection("Home"));
-    workspaceHeaderTitle.append(home, " / Connect");
-    workspacePageTitle.textContent = "Connected Apps";
-    renderConnections();
-  } else workspaceHeaderTitle.textContent = section;
+    workspaceHeaderTitle.append(home, ` / ${section}`);
+    workspacePageTitle.textContent = plan ? "Upcoming Milestone" : connect ? "Connected Apps" : section;
+    if (connect) renderConnections();
+  } else {
+    workspaceHeaderTitle.textContent = section;
+  }
   saveProject(activeProject);
   document.title = `${section} · ${gameName} · Aggro.`;
   workspaceQuery.set("project", activeProject.id);

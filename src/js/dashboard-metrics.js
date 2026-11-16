@@ -1,13 +1,13 @@
 // Reference values for the prototype's simulated application connections.
 const dashboardMetricExamples = [
-  { title: "Steam Wishlists", value: 12480, gain: 842, updated: "4h", icon: "heart" },
-  { title: "Discord Members", value: 3214, gain: 127, updated: "1h", icon: "users" },
-  { title: "Patreon Patrons", value: 186, gain: 9, updated: "30m", icon: "crown" },
-  { title: "Connections Live", value: 24, detail: "6 scheduled next 14d", updated: "10m", icon: "signal" },
-  { title: "Press Mentions", value: 37, gain: 4, updated: "20m", icon: "newspaper" },
-  { title: "YouTube Subs", value: 1942, gain: 88, updated: "2h", icon: "video" },
-  { title: "TikTok Followers", value: 8730, gain: 1204, updated: "1h", icon: "music" },
-  { title: "Newsletter Subs", value: 412, gain: 31, updated: "1d", icon: "mail" },
+  { title: "Steam Wishlists", value: 12480, gain: 842, updated: "4h", icon: "heart", trend: [3, 5, 4, 8, 7, 10, 14, 12, 16, 15, 20, 18, 24, 26, 25, 27, 28] },
+  { title: "Discord Members", value: 3214, gain: 127, updated: "1h", icon: "users", trend: [7, 9, 8, 12, 16, 20, 18, 13, 11, 14, 13, 17, 20, 19, 22, 24, 23] },
+  { title: "Patreon Patrons", value: 186, gain: 9, updated: "30m", icon: "crown", trend: [5, 5, 6, 5, 5, 12, 12, 11, 12, 12, 19, 19, 18, 19, 24, 24, 25] },
+  { title: "Connections Live", value: 24, detail: "6 scheduled next 14d", updated: "10m", icon: "signal", trend: [14, 12, 17, 15, 10, 13, 18, 16, 12, 14, 19, 16, 11, 14, 17, 15, 16] },
+  { title: "Press Mentions", value: 37, gain: 4, updated: "20m", icon: "newspaper", trend: [5, 6, 5, 5, 17, 10, 7, 8, 7, 22, 14, 11, 12, 26, 18, 15, 19] },
+  { title: "YouTube Subs", value: 1942, gain: 88, updated: "2h", icon: "video", trend: [4, 7, 10, 13, 16, 18, 19, 18, 16, 17, 19, 21, 23, 24, 25, 24, 26] },
+  { title: "TikTok Followers", value: 8730, gain: 1204, updated: "1h", icon: "music", trend: [4, 8, 6, 15, 10, 7, 19, 13, 9, 22, 16, 25, 19, 15, 24, 21, 28] },
+  { title: "Newsletter Subs", value: 412, gain: 31, updated: "1d", icon: "mail", trend: [5, 7, 9, 10, 11, 12, 11, 12, 11, 12, 13, 15, 18, 22, 25, 26, 27] },
 ];
 const dashboardMetricIcons = {
   heart: '<path d="M20 5c-3-3-7-1-8 1-1-2-5-4-8-1-4 4 1 9 8 15 7-6 12-11 8-15Z"/>',
@@ -104,7 +104,7 @@ function filterDashboardMetricDates(kind, records, card) {
   return records.filter((record) => !record.date || new Date(`${record.date}T12:00:00`) <= limit);
 }
 
-function metricCard(metric, index, range) {
+function metricCard(metric, range) {
   const card = document.createElement("button");
   card.type = "button";
   card.className = "metrics-card";
@@ -129,7 +129,7 @@ function metricCard(metric, index, range) {
   chart.setAttribute("aria-hidden", "true");
   chart.classList.add("metrics-sparkline");
   const line = document.createElementNS(icon.namespaceURI, "polyline");
-  line.setAttribute("points", metric.detail ? "0,20 10,24 20,17 30,22 40,15 50,20 60,16 70,22 80,18" : `0,28 10,26 20,27 30,${23 - index % 3} 40,22 50,16 60,17 70,12 80,9`);
+  line.setAttribute("points", metric.trend.map((value, index, trend) => `${index * 80 / (trend.length - 1)},${30 - value}`).join(" "));
   chart.append(line);
   values.append(value, chart);
   const change = document.createElement("span");
@@ -160,7 +160,7 @@ function renderDashboardMetrics(card, section) {
   }
   const range = metricsReportingRange(card);
   document.querySelector("#metrics-comparison").textContent = range.comparison;
-  metricsTrack.replaceChildren(...dashboardMetricExamples.map((metric, index) => metricCard(metric, index, range)));
+  metricsTrack.replaceChildren(...dashboardMetricExamples.map((metric) => metricCard(metric, range)));
   metricsTrack.scrollLeft = 0;
   updateMetricsNavigation();
 }

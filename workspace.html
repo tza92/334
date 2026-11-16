@@ -16,6 +16,10 @@
     <link rel="stylesheet" href="src/css/authorize.css">
     <link rel="stylesheet" href="src/css/dashboard-metrics.css">
     <link rel="stylesheet" href="src/css/home-setup.css">
+    <link rel="stylesheet" href="src/css/plan.css">
+    <link rel="stylesheet" href="src/css/settings.css">
+    <link rel="stylesheet" href="src/css/notifications.css">
+    <link rel="stylesheet" href="src/css/analytics.css">
     <script src="src/js/autocomplete.js" defer></script>
     <script src="src/js/dropdown.js" defer></script>
     <script src="src/js/projects.js" defer></script>
@@ -32,6 +36,10 @@
     <script src="src/js/connections.js" defer></script>
     <script src="src/js/dashboard-metrics.js" defer></script>
     <script src="src/js/home-setup.js" defer></script>
+    <script src="src/js/plan.js" defer></script>
+    <script src="src/js/settings.js" defer></script>
+    <script src="src/js/notifications.js" defer></script>
+    <script src="src/js/analytics.js" defer></script>
   </head>
   <body class="workspace-open">
     <p id="text-completion-hint" class="visually-hidden">Typing a matching first character fills in suggested text. You can then edit it freely.</p>
@@ -59,6 +67,8 @@
         <path d="M8 3v4m8-4v4M4 11h16"/>
       </symbol>
       <symbol id="edit" viewBox="0 0 24 24"><path d="m15 5 4 4M4 20l4-1L20 7a2.8 2.8 0 0 0-4-4L4 15Z"/></symbol>
+      <symbol id="play" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m10 8 6 4-6 4Z"/></symbol>
+      <symbol id="video" viewBox="0 0 24 24"><rect x="3" y="9" width="18" height="12" rx="1"/><path d="M3 9V4h18v5M6 4l3 5m3-5 3 5m3-5 3 5"/></symbol>
       <symbol id="close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
       <symbol id="chevron-right" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></symbol>
       <symbol id="trash" viewBox="0 0 24 24"><path d="M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7M14 10v7"/></symbol>
@@ -127,15 +137,28 @@
       <span id="workspace-header-title" class="workspace-header-title">Home</span>
       <nav class="account-nav" aria-label="Account">
         <button
+          id="notifications-trigger"
           class="icon-button notification-button"
           type="button"
+          popovertarget="notifications-popup"
+          aria-haspopup="dialog"
+          aria-expanded="false"
+          aria-controls="notifications-popup"
           aria-label="Notifications"
+          hidden
         >
           <svg class="icon" aria-hidden="true"><use href="#bell"/></svg>
         </button>
         <button class="avatar" type="button" aria-label="Account for MC">MC</button>
       </nav>
     </header>
+
+    <section id="notifications-popup" class="notifications-popup" popover role="dialog" aria-labelledby="notifications-title">
+      <header class="notifications-heading"><h2 id="notifications-title">Notifications</h2><button id="notifications-read-all" type="button">Mark all as read</button></header>
+      <div id="notifications-list" class="notifications-list"></div>
+      <footer><button id="notifications-settings" type="button">Notification settings</button></footer>
+      <p id="notifications-status" class="visually-hidden" role="status"></p>
+    </section>
 
     <main id="game-workspace" class="game-workspace" aria-labelledby="workspace-page-title">
       <div class="dashboard-container">
@@ -234,6 +257,94 @@
           <p id="metrics-status" class="visually-hidden" role="status"></p>
         </section>
 
+        <section id="analytics-page" class="analytics-page" aria-label="Analytics dashboard" hidden>
+          <aside id="analytics-overview" class="analytics-card analytics-overview" aria-labelledby="analytics-overview-title">
+            <header class="analytics-overview-heading"><h2 id="analytics-overview-title">Overview</h2><button id="analytics-overview-close" class="icon-button" type="button" aria-label="Hide overview"><svg class="icon" aria-hidden="true"><use href="#close"/></svg></button></header>
+            <div id="analytics-overview-content"></div>
+          </aside>
+          <button id="analytics-overview-open" class="icon-button analytics-overview-toggle" type="button" aria-label="Show overview" aria-controls="analytics-overview" aria-expanded="false" hidden><svg class="icon" aria-hidden="true"><use href="#chevron-right"/></svg></button>
+          <div class="analytics-main">
+            <header class="analytics-card analytics-toolbar">
+              <div class="analytics-insights-heading"><h2><span class="analytics-series-dot" aria-hidden="true"></span>Insights</h2><span id="analytics-date-range"></span></div>
+              <div class="analytics-controls">
+                <button id="analytics-add" class="button button--secondary" type="button">New Touchpoint <svg class="icon" aria-hidden="true"><use href="#plus"/></svg></button>
+                <select id="analytics-period" aria-label="Reporting period" hidden><option value="7">Last 7 Days</option><option value="28">Last 28 Days</option><option value="60">Last 60 Days</option><option value="365">Last 365 Days</option><option value="custom">Custom</option></select>
+                <button id="analytics-period-trigger" class="button button--secondary analytics-period-trigger" type="button" popovertarget="analytics-period-menu" aria-haspopup="menu" aria-expanded="false" aria-controls="analytics-period-menu" aria-label="Reporting period"><span data-dropdown-label>Last 7 Days</span><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+                <div id="analytics-period-menu" class="filter-menu analytics-option-menu" popover role="menu" aria-label="Reporting period"></div>
+                <button id="analytics-filter-trigger" class="icon-button" type="button" popovertarget="analytics-filter-menu" aria-haspopup="menu" aria-expanded="false" aria-controls="analytics-filter-menu" aria-label="Filter chart sources"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h18l-7 8v7l-4 2V12Z"/></svg></button>
+                <div id="analytics-filter-menu" class="analytics-filter-menu analytics-option-menu" popover role="menu" aria-label="Chart sources"></div>
+              </div>
+            </header>
+            <section class="analytics-card analytics-chart-card" aria-label="Activity over the reporting period"><div id="analytics-chart"></div><div class="analytics-chart-footer"><div id="analytics-chart-legend" class="analytics-chart-legend"></div><span id="analytics-data-note"></span></div></section>
+            <section class="analytics-card analytics-key-metrics" aria-labelledby="analytics-metrics-title"><header><h2 id="analytics-metrics-title"><span class="analytics-series-dot analytics-dot--green" aria-hidden="true"></span>Key Metrics</h2><button id="analytics-metrics-edit" class="icon-button" type="button" popovertarget="analytics-metrics-menu" aria-haspopup="dialog" aria-expanded="false" aria-controls="analytics-metrics-menu" aria-label="Customize key metrics"><svg class="icon" aria-hidden="true"><use href="#edit"/></svg></button></header><div id="analytics-metrics-menu" class="analytics-filter-menu" popover role="dialog" aria-label="Customize key metrics"></div><div id="analytics-metrics" class="analytics-metrics"></div><p class="analytics-metrics-note">**Est. Based on in app-reporting + UTM Traffic**</p></section>
+            <div id="analytics-breakdowns" class="analytics-breakdowns"></div>
+          </div>
+        </section>
+
+        <section id="settings-page" class="settings-page" aria-label="Settings" hidden>
+          <div class="settings-tabs" role="tablist" aria-label="Settings categories">
+            <button id="settings-account-tab" type="button" role="tab" aria-selected="true" aria-controls="settings-account">Account</button>
+            <button id="settings-projects-tab" type="button" role="tab" aria-selected="false" aria-controls="settings-projects" tabindex="-1">Projects</button>
+            <button id="settings-notifications-tab" type="button" role="tab" aria-selected="false" aria-controls="settings-notifications" tabindex="-1">Notifications</button>
+          </div>
+          <div id="settings-account" class="settings-panels" role="tabpanel" aria-labelledby="settings-account-tab">
+            <section class="settings-card" aria-labelledby="settings-picture-title">
+              <h2 id="settings-picture-title">Profile Picture</h2>
+              <div class="settings-picture-row">
+                <div id="settings-avatar" class="settings-avatar" aria-label="Profile picture">MC</div>
+                <div><button id="settings-upload" class="button button--primary" type="button">Update Profile Picture</button><input id="settings-picture-input" type="file" accept="image/jpeg,image/png,image/gif" hidden><p class="settings-picture-help">Must be JPEG, PNG, or GIF and cannot exceed 10MB</p></div>
+              </div>
+            </section>
+            <section class="settings-card" aria-labelledby="settings-info-title">
+              <h2 id="settings-info-title">Account Info</h2>
+              <div id="settings-info-rows"></div>
+            </section>
+            <section class="settings-card" aria-labelledby="settings-security-title">
+              <h2 id="settings-security-title">Password &amp; Security</h2>
+              <div class="settings-row"><span class="settings-label">Password</span><button class="icon-button settings-edit" type="button" data-settings-security="password" aria-label="Edit password"><svg class="icon" aria-hidden="true"><use href="#edit"/></svg></button></div>
+              <div class="settings-row"><span class="settings-label">Two-Factor Authentication</span><span class="settings-value">Not enabled</span><button class="icon-button settings-edit" type="button" data-settings-security="two-factor" aria-label="Edit two-factor authentication"><svg class="icon" aria-hidden="true"><use href="#edit"/></svg></button></div>
+              <button id="settings-devices" class="settings-row settings-device-row" type="button"><span class="settings-label">Logged-in Devices</span><span class="settings-value">1 device</span><svg class="icon" aria-hidden="true"><use href="#chevron-right"/></svg></button>
+            </section>
+          </div>
+          <div id="settings-projects" class="settings-panels" role="tabpanel" aria-labelledby="settings-projects-tab" hidden></div>
+          <div id="settings-notifications" class="settings-panels" role="tabpanel" aria-labelledby="settings-notifications-tab" hidden></div>
+          <p id="settings-status" class="settings-status" role="status"></p>
+          <footer class="settings-footer"><button id="settings-logout" class="button button--secondary settings-logout" type="button">Log out <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4H4v16h5m5-13 5 5-5 5m-6-5h11"/></svg></button></footer>
+        </section>
+
+        <section id="plan-page" class="plan-page" aria-label="Campaign plan" hidden>
+          <div class="plan-heading"><button id="plan-edit-milestone" class="button button--secondary" type="button">Edit Milestone <svg class="icon" aria-hidden="true"><use href="#edit"/></svg></button></div>
+          <section id="plan-milestone-overview" class="plan-milestone-overview" aria-label="Upcoming milestone and goals"></section>
+          <section class="plan-calendar-panel" aria-label="Planning calendar">
+            <div class="plan-calendar">
+              <header class="plan-calendar-heading">
+                <h2 id="plan-month" aria-live="polite"></h2>
+                <div class="plan-month-controls">
+                  <button id="plan-month-previous" class="icon-button" type="button" aria-label="Previous month"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 6-6 6 6 6"/></svg></button>
+                  <button id="plan-month-next" class="icon-button" type="button" aria-label="Next month"><svg class="icon" aria-hidden="true"><use href="#chevron-right"/></svg></button>
+                  <button id="plan-add-trigger" class="button button--secondary plan-add-trigger" type="button" popovertarget="plan-add-menu" aria-haspopup="menu" aria-expanded="false" aria-controls="plan-add-menu">Add <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+                  <div id="plan-add-menu" class="filter-menu" popover role="menu" aria-label="Add to calendar">
+                    <button class="filter-option" type="button" tabindex="-1" data-plan-add="milestone" role="menuitem">Add Milestone <svg class="icon" aria-hidden="true"><use href="#plus"/></svg></button>
+                    <button class="filter-option" type="button" tabindex="-1" data-plan-add="goal" role="menuitem">Add Goals <svg class="icon" aria-hidden="true"><use href="#plus"/></svg></button>
+                    <button class="filter-option" type="button" tabindex="-1" data-plan-add="event" role="menuitem">Add Events <svg class="icon" aria-hidden="true"><use href="#plus"/></svg></button>
+                    <button class="filter-option" type="button" tabindex="-1" data-plan-add="fund" role="menuitem">Add Funds <svg class="icon" aria-hidden="true"><use href="#plus"/></svg></button>
+                  </div>
+                </div>
+              </header>
+              <div class="plan-weekdays" aria-hidden="true"><span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span></div>
+              <div id="plan-days" class="plan-days" role="group" aria-labelledby="plan-month"></div>
+            </div>
+            <div class="plan-agenda">
+              <div id="plan-legend" class="plan-legend" aria-label="Calendar categories"></div>
+              <div id="plan-selection" class="plan-selection" hidden><span>1 day selected</span><button id="plan-clear-selection" type="button"><svg class="icon" aria-hidden="true"><use href="#close"/></svg> Clear</button></div>
+              <div id="plan-agenda-list" class="plan-agenda-list" aria-live="polite"></div>
+              <button id="plan-show-month" class="text-link" type="button" hidden>Show all dates this month</button>
+            </div>
+          </section>
+          <div id="plan-record-panels" class="plan-record-panels"></div>
+          <section class="plan-opportunities" aria-labelledby="plan-funds-title"><h2 id="plan-funds-title">Upcoming Funds</h2><div id="plan-funds" class="plan-opportunity-grid"></div></section>
+          <section class="plan-opportunities" aria-labelledby="plan-events-title"><h2 id="plan-events-title">Upcoming Events</h2><div id="plan-events" class="plan-opportunity-grid"></div></section>
+        </section>
         <div class="dashboard-grid">
           <section id="goals-panel" class="dashboard-panel" aria-labelledby="goals-title">
             <header class="panel-heading">

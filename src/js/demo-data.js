@@ -6,6 +6,33 @@ function initializeDefaultGameDashboard(card) {
   card.defaultDashboardSeeded = true;
 }
 
+// Update only known sample copy; user-created records and edits remain intact.
+function syncConnectionDemoContent(card) {
+  for (const record of gameDashboardData(card).touchpoints) {
+    if (!record.demo || record.demoContentVersion === 1) continue;
+    if (record.title === 'Feature: "5 solo dev horror games to watch for in 2025"') {
+      record.title = 'Feature: "5 solo dev horror games to watch for in 2026"';
+    }
+    if (record.platform?.toLowerCase() === "youtube" && record.icon === "megaphone") record.icon = "play";
+    const relativeDays = { Yesterday: 1, "2d ago": 2, "3d ago": 3, "5d ago": 5, "1w ago": 7 }[record.relativeTime];
+    if (relativeDays && record.date) {
+      const date = new Date(`${record.date}T12:00:00`);
+      date.setDate(date.getDate() - relativeDays);
+      record.date = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+    }
+    record.demoContentVersion = 1;
+  }
+}
+
+function connectionRecordTime(record) {
+  const days = Math.round((Date.parse(`${localDateKey()}T00:00:00Z`) - Date.parse(`${record.date}T00:00:00Z`)) / 86400000);
+  if (days === 0) return /^(?:\d+[hm] ago)$/.test(record.relativeTime || "") ? record.relativeTime : "Today";
+  if (days === 1) return "Yesterday";
+  if (days > 1 && days < 7) return `${days}d ago`;
+  if (days >= 7 && days < 28) return `${Math.floor(days / 7)}w ago`;
+  return dashboardDate(record.date);
+}
+
 // Populate the dashboard reference after the first simulated connection is configured.
 function seedConnectionDemo(card) {
   const seeded = card.seededDemoPanels ??= new Set();
@@ -25,7 +52,7 @@ function seedConnectionDemo(card) {
   gameDashboardData(card).touchpoints.push(
     { title: '"When your save file corrupts"', type: "post", category: "SHORT-FORM", platform: "TIKTOK", summary: "48.2K views · 3.1K likes · +84 wishlists attributed", relativeTime: "2h ago", icon: "video", date, demo: true },
     { title: '"Demo Teaser"', type: "post", category: "SHORT-FORM", platform: "Instagram", summary: "$120 spent · 41K reach · +67 wishlists", relativeTime: "Yesterday", icon: "megaphone", date, demo: true },
-    { title: 'Feature: "5 solo dev horror games to watch for in 2025"', type: "press", category: "PRESS", platform: "INDIE GAMES PLUS", summary: "~12K article reads · +221 wishlists attributed", relativeTime: "Yesterday", icon: "newspaper", date, demo: true },
+    { title: 'Feature: "5 solo dev horror games to watch for in 2026"', type: "press", category: "PRESS", platform: "INDIE GAMES PLUS", summary: "~12K article reads · +221 wishlists attributed", relativeTime: "Yesterday", icon: "newspaper", date, demo: true },
     { title: "Updated screenshots + short trailer", type: "store", category: "STOREFRONT", platform: "STEAM", summary: "Visits → Wishlist rate +2.3% (14.1%)", relativeTime: "2d ago", icon: "storefront", date, demo: true },
   );
   extendConnectionDemo(card);
@@ -40,7 +67,7 @@ function extendConnectionDemo(card) {
     { title: "Playtest sign-ups opened in #announcements", type: "community", category: "COMMUNITY", platform: "DISCORD", summary: "312 reactions · +46 members joined", relativeTime: "1w ago", icon: "link", date, demo: true },
   ];
   examples.forEach(example => {
-    if (!records.some(record => record.title === example.title)) records.push(example);
+    if (!records.some(record => record.title === example.title || record.demo && record.type === example.type && record.platform?.toLowerCase() === example.platform.toLowerCase())) records.push(example);
   });
 }
 
@@ -78,7 +105,7 @@ function seedPlanningDemo(card, kind, submittedRecord) {
     { title: "Secure 5 launch press features", metric: "Press features", target: "5", current: 0, date: relativeDate(56) },
     { title: "Grow the newsletter to 1,000 subscribers", metric: "Newsletter subscribers", target: "1000", current: 300, date: relativeDate(63) },
   ] : [
-    { title: "Steam Next Fest demo submission", type: "Event", category: "Deliverable", channel: "Event", event: "Steam Next Fest", date: "2026-08-12", demoDaysUntil: 6, goals: [{ metric: "Steam wishlists", target: "15000" }, { metric: "Discord members", target: "4000" }] },
+    { title: "Steam Next Fest demo submission", type: "Event", category: "Deliverable", channel: "Event", event: "Steam Next Fest", date: "2026-08-12", demoDaysUntil: 6, goals: [{ metric: "Steam wishlists", target: "15000" }, { metric: "Discord members", target: "4000" }, { metric: "Patreon members", target: "250" }] },
     { title: "Devlog #14 \u2014 combat overhaul reveal", type: "Content", category: "Content", channel: "YouTube + TikTok", date: "2026-08-20", demoDaysUntil: 14 },
     { title: "PAX West \u2014 booth 2184 setup", type: "Event", category: "Event", channel: "Showcase", event: "PAX West", date: "2026-08-29", demoDaysUntil: 23 },
     { title: "Press embargo lifts \u2014 IGN preview", type: "Press", category: "Press", channel: "Article", date: "2026-09-10", demoDaysUntil: 35 },
